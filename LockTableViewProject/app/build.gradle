@@ -19,6 +19,12 @@ android {
     }
 }
 
+repositories {
+    maven {
+        url  "https://jitpack.io"
+    }
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -26,5 +32,6 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.0.0'
     testCompile 'junit:junit:4.12'
-    compile project(':locktableview')
+//    compile project(':locktableview')
+    compile 'com.github.RmondJone:LockTableView:1.0.0'
 }

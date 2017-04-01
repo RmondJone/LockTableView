@@ -2,7 +2,7 @@
 自定义表格,可锁定双向表头,自适应列宽,快速集成<br>
 ## 效果展示
 
-![image](https://github.com/RmondJone/SpringDiaLog/blob/master/GIF.gif)
+![image](https://github.com/RmondJone/LockTableView/blob/master/show.gif)
 
 ## 更新日志
 * 2017年04月01日13:02:01----------LockTableView V1.0.0
@@ -10,11 +10,21 @@
 ## 工程集成说明
 * 第一步
 ```java
+//在工程gradle文件里
 allprojects {
     repositories {
         .......
         maven { url 'https://jitpack.io' }
         ......
+    }
+}
+```
+
+```java
+//如果不在工程模块里，也可以加入模块gradle文件中
+repositories {
+    maven {
+        url  "https://jitpack.io"
     }
 }
 ```
