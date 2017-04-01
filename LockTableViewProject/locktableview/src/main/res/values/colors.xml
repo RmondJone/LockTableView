@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 颜色 -->
+    <color name="color_hei_8">#00000000</color>
+    <color name="forget_pwd">#334E6C</color>
+    <color name="table_head">#E5EFFE</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="light_gray">#e6e6e6</color>
+    <color name="light_gray2">#fafafa</color>
+    <color name="deep_gray">#555555</color>
+    <color name="deep_red">#FF0033</color>
+    <color name="light_yellow2">#ADD8E6</color>
+    <color name="border_color">#817F80</color>
+    <color name="blue">#0000ff</color>
+    <color name="transparent">#00000000</color>
+    <color name="green">#0F0</color>
+    <color name="red">#FF0000</color>
+    <color name="jt1">#DDDDDD</color>
+    <color name="first">#b8b8b8</color>
+    <color name="first_dianji">#0cb9f5</color>
+    <color name="beijin">#2c8fd3</color>
+    <color name="orange">#ffa500</color>
+    <color name="tv_textblackcolor">#000000</color>
+    <color name="calendar_background">#e3eef4</color>
+    <color name="selection">#b1dce2ff</color>
+    <color name="calendar_zhe_day">#faedda</color>
+    <color name="event_center">#ff6bd697</color>
+    <color name="noMonth">#c0c0c0</color>
+    <color name="text_6">#FFf3feff</color>
+    <color name="text_7">#FFfff1f2</color>
+    <color name="Text">#603b07</color>
+    <color name="lv_cacheColorHint">#00000000</color>
+    <color name="ll_background_10501">#31abfe</color>
+    <color name="list_item_click">#76c120</color>
+    <color name="white_bg_10531M">#ffffffff</color>
+    <color name="txtToDay">#EE4000</color>
+    <color name="green_bg_10531M">#fff2f9ec</color>
+    <color name="ll_graybg">#EDEDE4</color>
+    <color name="search_editbg">#E8E8E8</color>
+    <color name="text_color">#ff434343</color>
+    <color name="review_bac">#FAFAFA</color>
+    <color name="review_pep">#3C70A6</color>
+    <color name="review_time">#C3C4C9</color>
+    <color name="review_content">#262B31</color>
+    <color name="horizontal_divider">#CED7DF</color>
+    <color name="comment_text">#7B7B7B</color>
+    <color name="comment_text_bottom">#949494</color>
+    <color name="horizontal_toutiao">#1989E0</color>
+    <color name="tabtitle_color">#CFEDF9</color>
+    <color name="tabitem_color1">#FFFFFF</color>
+	<color name="tabitem_color2">#F7F8F9</color>
+	<color name="dashline_color">#C2C0C2</color>
+	
+</resources>
