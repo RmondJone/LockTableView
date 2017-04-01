@@ -21,7 +21,7 @@ allprojects {
 ```
 
 ```java
-//如果不在工程模块里，也可以加入模块gradle文件中
+//如果不在工程gradle文件里加入，也可以加入模块gradle文件中
 repositories {
     maven {
         url  "https://jitpack.io"
