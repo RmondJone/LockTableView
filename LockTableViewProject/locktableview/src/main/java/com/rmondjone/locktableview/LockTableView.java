@@ -361,84 +361,216 @@ public class LockTableView {
      * 创建锁定列视图
      */
     private void createLockColumnView() {
-        //构造ScrollView子视图
-        LinearLayout linearLayout=new LinearLayout(mContext);
-        LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        linearLayout.setLayoutParams(layoutParams);
-        for (int i=0;i<mTableRowDatas.size();i++){
-            View tableItemView=LayoutInflater.from(mContext).inflate(R.layout.locktable_item,null);
-            LinearLayout contentView=(LinearLayout)tableItemView.findViewById(R.id.lockView);
-            TextView lockView=(TextView)tableItemView.findViewById(R.id.lockView_Text);
-            CustomHorizontalScrollView scrollView=(CustomHorizontalScrollView)tableItemView.findViewById(R.id.lockView_ScrollView);
-            if(!isLockFristRow){
+        View lockTableViewContent=LayoutInflater.from(mContext).inflate(R.layout.locktablecontentview,null);
+        LinearLayout lockViewParent=(LinearLayout) lockTableViewContent.findViewById(R.id.lockView_parent);
+        CustomHorizontalScrollView lockScrollViewParent=(CustomHorizontalScrollView)lockTableViewContent.findViewById(R.id.lockScrollView_parent);
+        //构造锁定视图
+        for (int i=0;i<mTableColumnDatas.size();i++){
+            //构造TextView容器，如果要设置背景色设置这一个而不是设置TextView，TextView有外边距设置不全
+            LinearLayout textViewContainer=new LinearLayout(mContext);
+            LinearLayout.LayoutParams textLinearParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            textViewContainer.setOrientation(LinearLayout.VERTICAL);
+            textViewContainer.setLayoutParams(textLinearParams);
+            //构造TextView
+            TextView textView=new TextView(mContext);
+            //设置布局
+            LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            textViewParams.setMargins(45, 45, 45, 45);
+            textView.setLayoutParams(textViewParams);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mTextViewSize);
+            textView.setText(mTableColumnDatas.get(i));
+            textView.setGravity(Gravity.CENTER);
+            ViewGroup.LayoutParams layoutParams = textView.getLayoutParams();
+            layoutParams.width = DisplayUtil.dip2px(mContext, mColumnMaxWidths.get(0));
+            textView.setLayoutParams(layoutParams);
+            if (!isLockFristRow){
                 if (i==0){
-                    lockView.setTextColor(ContextCompat.getColor(mContext, mTableHeadTextColor));
-                    contentView.setBackgroundColor(ContextCompat.getColor(mContext, mFristRowBackGroudColor));
-                    createScollview(scrollView , mTableRowDatas.get(i), true);
+                    textViewContainer.setBackgroundColor(ContextCompat.getColor(mContext,mFristRowBackGroudColor));
+                    textView.setTextColor(ContextCompat.getColor(mContext, mTableHeadTextColor));
                 }else{
-                    lockView.setTextColor(ContextCompat.getColor(mContext, mTableContentTextColor));
-                    createScollview(scrollView , mTableRowDatas.get(i), false);
+                    textView.setTextColor(ContextCompat.getColor(mContext, mTableContentTextColor));
                 }
             }else{
-                createScollview(scrollView , mTableRowDatas.get(i), false);
+                textView.setTextColor(ContextCompat.getColor(mContext, mTableContentTextColor));
             }
-            //加入滚动视图列表，并设置滚动监听
-            mScrollViews.add(scrollView );
-            scrollView .setOnScrollChangeListener(new CustomHorizontalScrollView.onScrollChangeListener() {
-                @Override
-                public void onScrollChanged(HorizontalScrollView scrollView, int x, int y){
-                    changeAllScrollView(x, y);
-                }
-            });
-            lockView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mTextViewSize);
-            lockView.setText(mTableColumnDatas.get(i));
-            ViewGroup.LayoutParams lockViewLayoutParams = lockView.getLayoutParams();
-            lockViewLayoutParams.width = DisplayUtil.dip2px(mContext, mColumnMaxWidths.get(0));
-            lockView.setLayoutParams(lockViewLayoutParams);
-            linearLayout.addView(tableItemView);
+            textViewContainer.addView(textView);
+            //表格线
+            View splite=new View(mContext);
+            ViewGroup.LayoutParams spliteLayoutParam= new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    DisplayUtil.dip2px(mContext,1));
+            splite.setLayoutParams(spliteLayoutParam);
+            splite.setBackgroundColor(ContextCompat.getColor(mContext,R.color.light_gray));
+            lockViewParent.addView(textViewContainer);
+            lockViewParent.addView(splite);
         }
-        //加入子视图
-        mTableScrollView.addView(linearLayout);
+        //构造滚动视图
+        LinearLayout scollViewItemContentView=new LinearLayout(mContext);
+        LinearLayout.LayoutParams scollViewItemContentViewParams=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        scollViewItemContentView.setLayoutParams(scollViewItemContentViewParams);
+        scollViewItemContentView.setOrientation(LinearLayout.VERTICAL);
+        for (int i=0;i<mTableRowDatas.size();i++){
+            ArrayList<String> datas=mTableRowDatas.get(i);
+            //设置LinearLayout
+            LinearLayout linearLayout = new LinearLayout(mContext);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            linearLayout.setLayoutParams(layoutParams);
+            linearLayout.setGravity(Gravity.CENTER);
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            if (!isLockFristRow){
+                if (i==0){
+                    linearLayout.setBackgroundColor(ContextCompat.getColor(mContext,mFristRowBackGroudColor));
+                }
+            }
+            for (int j = 0; j < datas.size(); j++) {
+                //构造单元格
+                TextView textView = new TextView(mContext);
+                if (!isLockFristRow){
+                    if (i==0) {
+                        textView.setTextColor(ContextCompat.getColor(mContext, mTableHeadTextColor));
+                    } else {
+                        textView.setTextColor(ContextCompat.getColor(mContext, mTableContentTextColor));
+                    }
+                }else{
+                    textView.setTextColor(ContextCompat.getColor(mContext, mTableContentTextColor));
+                }
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mTextViewSize);
+                textView.setGravity(Gravity.CENTER);
+                textView.setText(datas.get(j));
+                //设置布局
+                LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                textViewParams.setMargins(45, 45, 45, 45);
+                textView.setLayoutParams(textViewParams);
+                ViewGroup.LayoutParams textViewParamsCopy = textView.getLayoutParams();
+                textViewParamsCopy.width = DisplayUtil.dip2px(mContext, mColumnMaxWidths.get(j+1));
+                linearLayout.addView(textView);
+                //右侧分隔线
+                if (j != datas.size() - 1) {
+                    View splitView = new View(mContext);
+                    ViewGroup.LayoutParams splitViewParmas = new ViewGroup.LayoutParams(DisplayUtil.dip2px(mContext, 1),
+                            ViewGroup.LayoutParams.MATCH_PARENT);
+                    splitView.setLayoutParams(splitViewParmas);
+                    if (!isLockFristRow){
+                        if (i==0) {
+                            splitView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
+                        } else {
+                            splitView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.light_gray));
+                        }
+                    }else{
+                        splitView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.light_gray));
+                    }
+                    linearLayout.addView(splitView);
+                }
+            }
+            scollViewItemContentView.addView(linearLayout);
+            //底部分隔线
+            View splite=new View(mContext);
+            ViewGroup.LayoutParams spliteLayoutParam= new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    DisplayUtil.dip2px(mContext,1));
+            splite.setLayoutParams(spliteLayoutParam);
+            splite.setBackgroundColor(ContextCompat.getColor(mContext,R.color.light_gray));
+            scollViewItemContentView.addView(splite);
+        }
+        lockScrollViewParent.addView(scollViewItemContentView);
+        mScrollViews.add(lockScrollViewParent);
+        lockScrollViewParent.setOnScrollChangeListener(new CustomHorizontalScrollView.onScrollChangeListener() {
+            @Override
+            public void onScrollChanged(HorizontalScrollView scrollView, int x, int y) {
+                changeAllScrollView(x,y);
+            }
+        });
+        mTableScrollView.addView(lockTableViewContent);
     }
 
     /**
      * 创建不锁定列视图
      */
     private void createUnLockColumnView() {
-        //构造ScrollView子视图
-        LinearLayout linearLayout=new LinearLayout(mContext);
-        LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        linearLayout.setLayoutParams(layoutParams);
+        View lockTableViewContent=LayoutInflater.from(mContext).inflate(R.layout.unlocktablecontentview,null);
+        CustomHorizontalScrollView lockScrollViewParent=(CustomHorizontalScrollView) lockTableViewContent.findViewById(R.id.unlockScrollView_parent);
+        //构造滚动视图
+        LinearLayout scollViewItemContentView=new LinearLayout(mContext);
+        LinearLayout.LayoutParams scollViewItemContentViewParams=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        scollViewItemContentView.setLayoutParams(scollViewItemContentViewParams);
+        scollViewItemContentView.setOrientation(LinearLayout.VERTICAL);
         for (int i=0;i<mTableRowDatas.size();i++){
-            View tableItemView=LayoutInflater.from(mContext).inflate(R.layout.unlocktable_item,null);
-            LinearLayout contentView=(LinearLayout)tableItemView.findViewById(R.id.lockView);
-            CustomHorizontalScrollView scrollView=(CustomHorizontalScrollView)tableItemView.findViewById(R.id.lockView_ScrollView);
-            if(!isLockFristRow){
+            ArrayList<String> datas=mTableRowDatas.get(i);
+            //设置LinearLayout
+            LinearLayout linearLayout = new LinearLayout(mContext);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            linearLayout.setLayoutParams(layoutParams);
+            linearLayout.setGravity(Gravity.CENTER);
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            if (!isLockFristRow){
                 if (i==0){
-                    contentView.setBackgroundColor(ContextCompat.getColor(mContext, mFristRowBackGroudColor));
-                    createScollview(scrollView , mTableRowDatas.get(i), true);
-                }else{
-                    createScollview(scrollView , mTableRowDatas.get(i), false);
+                    linearLayout.setBackgroundColor(ContextCompat.getColor(mContext,mFristRowBackGroudColor));
                 }
-            }else{
-                createScollview(scrollView , mTableRowDatas.get(i), false);
             }
-            //加入滚动视图列表，并设置滚动监听
-            mScrollViews.add(scrollView );
-            scrollView .setOnScrollChangeListener(new CustomHorizontalScrollView.onScrollChangeListener() {
-                @Override
-                public void onScrollChanged(HorizontalScrollView scrollView, int x, int y){
-                    changeAllScrollView(x, y);
+            for (int j = 0; j < datas.size(); j++) {
+                //构造单元格
+                TextView textView = new TextView(mContext);
+                if (!isLockFristRow){
+                    if (i==0) {
+                        textView.setTextColor(ContextCompat.getColor(mContext, mTableHeadTextColor));
+                    } else {
+                        textView.setTextColor(ContextCompat.getColor(mContext, mTableContentTextColor));
+                    }
+                }else{
+                    textView.setTextColor(ContextCompat.getColor(mContext, mTableContentTextColor));
                 }
-            });
-            linearLayout.addView(tableItemView);
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mTextViewSize);
+                textView.setGravity(Gravity.CENTER);
+                textView.setText(datas.get(j));
+                //设置布局
+                LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                textViewParams.setMargins(45, 45, 45, 45);
+                textView.setLayoutParams(textViewParams);
+                ViewGroup.LayoutParams textViewParamsCopy = textView.getLayoutParams();
+                textViewParamsCopy.width = DisplayUtil.dip2px(mContext, mColumnMaxWidths.get(j));
+                linearLayout.addView(textView);
+                //右侧分隔线
+                if (j != datas.size() - 1) {
+                    View splitView = new View(mContext);
+                    ViewGroup.LayoutParams splitViewParmas = new ViewGroup.LayoutParams(DisplayUtil.dip2px(mContext, 1),
+                            ViewGroup.LayoutParams.MATCH_PARENT);
+                    splitView.setLayoutParams(splitViewParmas);
+                    if (!isLockFristRow){
+                        if (i==0) {
+                            splitView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
+                        } else {
+                            splitView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.light_gray));
+                        }
+                    }else{
+                        splitView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.light_gray));
+                    }
+                    linearLayout.addView(splitView);
+                }
+            }
+            scollViewItemContentView.addView(linearLayout);
+            //底部分隔线
+            View splite=new View(mContext);
+            ViewGroup.LayoutParams spliteLayoutParam= new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    DisplayUtil.dip2px(mContext,1));
+            splite.setLayoutParams(spliteLayoutParam);
+            splite.setBackgroundColor(ContextCompat.getColor(mContext,R.color.light_gray));
+            scollViewItemContentView.addView(splite);
         }
-        //加入子视图
-        mTableScrollView.addView(linearLayout);
+        lockScrollViewParent.addView(scollViewItemContentView);
+        mScrollViews.add(lockScrollViewParent);
+        lockScrollViewParent.setOnScrollChangeListener(new CustomHorizontalScrollView.onScrollChangeListener() {
+            @Override
+            public void onScrollChanged(HorizontalScrollView scrollView, int x, int y) {
+                changeAllScrollView(x,y);
+            }
+        });
+        mTableScrollView.addView(lockTableViewContent);
     }
 
     /**
