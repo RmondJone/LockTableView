@@ -14,10 +14,8 @@
         <TextView
             android:id="@+id/lockHeadView_Text"
             android:gravity="center"
-            android:layout_margin="15dp"
-            android:layout_width="70dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
             android:textColor="@color/beijin"
             />
         <View

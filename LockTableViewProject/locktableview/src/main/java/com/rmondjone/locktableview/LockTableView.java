@@ -88,6 +88,10 @@ public class LockTableView {
      * 表格内容字体颜色
      */
     private int mTableContentTextColor;
+    /**
+     * 表格监听事件
+     */
+    private OnTableViewListener mTableViewListener;
 
 
     //表格数据
@@ -258,6 +262,7 @@ public class LockTableView {
             }
 //            Log.e("每列最大宽度dp:",mColumnMaxWidths.toString());
 
+
             //初始化每行最大高度
             for (int i = 0; i < mTableDatas.size(); i++) {
                 ArrayList<String> rowDatas = mTableDatas.get(i);
@@ -365,8 +370,10 @@ public class LockTableView {
             mColumnTitleView.setTextColor(ContextCompat.getColor(mContext, mTableHeadTextColor));
             mColumnTitleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mTextViewSize);
             mColumnTitleView.setText(mColumnTitle);
-            ViewGroup.LayoutParams layoutParams = mColumnTitleView.getLayoutParams();
+            LinearLayout.LayoutParams layoutParams =(LinearLayout.LayoutParams) mColumnTitleView.getLayoutParams();
             layoutParams.width = DisplayUtil.dip2px(mContext, mColumnMaxWidths.get(0));
+            layoutParams.height=DisplayUtil.dip2px(mContext,mRowMaxHeights.get(0));
+            layoutParams.setMargins(45, 45, 45, 45);
             mColumnTitleView.setLayoutParams(layoutParams);
             //构造滚动视图
             createScollview(mLockScrollView, mTableFristData, true);
@@ -455,7 +462,7 @@ public class LockTableView {
         }
         //构造滚动视图
         LinearLayout scollViewItemContentView=new LinearLayout(mContext);
-        LinearLayout.LayoutParams scollViewItemContentViewParams=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+        LinearLayout.LayoutParams scollViewItemContentViewParams=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         scollViewItemContentView.setLayoutParams(scollViewItemContentViewParams);
         scollViewItemContentView.setOrientation(LinearLayout.VERTICAL);
@@ -547,7 +554,7 @@ public class LockTableView {
         CustomHorizontalScrollView lockScrollViewParent=(CustomHorizontalScrollView) lockTableViewContent.findViewById(R.id.unlockScrollView_parent);
         //构造滚动视图
         LinearLayout scollViewItemContentView=new LinearLayout(mContext);
-        LinearLayout.LayoutParams scollViewItemContentViewParams=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+        LinearLayout.LayoutParams scollViewItemContentViewParams=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         scollViewItemContentView.setLayoutParams(scollViewItemContentViewParams);
         scollViewItemContentView.setOrientation(LinearLayout.VERTICAL);
@@ -639,6 +646,9 @@ public class LockTableView {
      */
     private void changeAllScrollView(int x, int y) {
         if (mScrollViews.size() > 0) {
+            if (mTableViewListener!=null){
+                mTableViewListener.onTableViewScrollChange(x,y);
+            }
             for (int i = 0; i < mScrollViews.size(); i++) {
                 HorizontalScrollView scrollView = mScrollViews.get(i);
                 scrollView.scrollTo(x, y);
@@ -835,5 +845,41 @@ public class LockTableView {
     public LockTableView setMinRowHeight(int minRowHeight) {
         this.minRowHeight = minRowHeight;
         return this;
+    }
+
+    public LockTableView setTableViewListener(OnTableViewListener mTableViewListener) {
+        this.mTableViewListener = mTableViewListener;
+        return this;
+    }
+
+    //值获取
+    public ArrayList<Integer> getColumnMaxWidths() {
+        return mColumnMaxWidths;
+    }
+
+    public ArrayList<Integer> getRowMaxHeights() {
+        return mRowMaxHeights;
+    }
+
+    public LinearLayout getLockHeadView() {
+        return mLockHeadView;
+    }
+
+    public LinearLayout getUnLockHeadView() {
+        return mUnLockHeadView;
+    }
+
+    public ArrayList<HorizontalScrollView> getScrollViews() {
+        return mScrollViews;
+    }
+
+    //回调监听
+    public interface OnTableViewListener{
+        /**
+         * 滚动监听
+         * @param x
+         * @param y
+         */
+        void onTableViewScrollChange(int x,int y);
     }
 }

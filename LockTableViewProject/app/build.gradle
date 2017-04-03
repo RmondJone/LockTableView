@@ -8,8 +8,8 @@ android {
         applicationId "com.rmondjone.locktableviewproject"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 2
-        versionName "1.0.2"
+        versionCode 3
+        versionName "1.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     dexOptions {
@@ -36,6 +36,6 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.0.0'
     testCompile 'junit:junit:4.12'
-//    compile project(':locktableview')
-    compile 'com.github.RmondJone:LockTableView:1.0.2'
+    compile project(':locktableview')
+//    compile 'com.github.RmondJone:LockTableView:1.0.3'
 }

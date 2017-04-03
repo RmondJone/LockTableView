@@ -2,11 +2,13 @@ package com.rmondjone.locktableviewproject;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.LinearLayout;
 
 import com.rmondjone.locktableview.LockTableView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,9 +22,9 @@ public class MainActivity extends AppCompatActivity {
         //构造假数据
         ArrayList<ArrayList<String>> mTableDatas=new ArrayList<ArrayList<String>>();
         ArrayList<String> mfristData=new ArrayList<String>();
-//        mfristData.add("标题");
+        mfristData.add("标题");
         for (int i=0;i<2;i++){
-            mfristData.add("数据111111111111"+i);
+            mfristData.add("数据"+i);
         }
         mTableDatas.add(mfristData);
         for (int i=0;i<22;i++){
@@ -46,6 +48,18 @@ public class MainActivity extends AppCompatActivity {
                 .setTableHeadTextColor(R.color.beijin)//表头字体颜色
                 .setTableContentTextColor(R.color.border_color)//单元格字体颜色
                 .setNullableString("N/A") //空值替换值
+                .setTableViewListener(new LockTableView.OnTableViewListener() {
+                    @Override
+                    public void onTableViewScrollChange(int x, int y) {
+                        Log.e("滚动值","["+x+"]"+"["+y+"]");
+                    }
+                })//设置滚动回调监听
                 .show(); //显示表格,此方法必须调用
+        //属性值获取
+        Log.e("每列最大宽度(dp)",mLockTableView.getColumnMaxWidths().toString());
+        Log.e("每行最大高度(dp)",mLockTableView.getRowMaxHeights().toString());
+        Log.e("表格所有的滚动视图",mLockTableView.getScrollViews().toString());
+        Log.e("表格头部固定视图(锁列)",mLockTableView.getLockHeadView().toString());
+        Log.e("表格头部固定视图(不锁列)",mLockTableView.getUnLockHeadView().toString());
     }
 }

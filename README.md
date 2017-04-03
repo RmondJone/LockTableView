@@ -10,6 +10,9 @@
   BUG修改，数据过多时会引起堆栈内存溢出，重新设计了一下，已经解决
 * 2017年04月03日11:46:53----------LockTableView V1.0.2
   BUG修改，缺省值BUG修改，自适应行高属性新增
+* 2017年04月03日14:55:00----------LockTableView V1.0.3
+  BUG修改，在低分辨率设备表头会错位的问题
+  新增滚动回调监听事件,新增一些属性值获取,方便开发者自己拓展控件功能
 
 ## 工程集成说明
 * 第一步
@@ -36,7 +39,7 @@ repositories {
 * 第二步
 ```java
   dependencies {
-		compile 'com.github.RmondJone:LockTableView:1.0.2'
+		compile 'com.github.RmondJone:LockTableView:1.0.3'
 	}
 ```
 
@@ -56,7 +59,20 @@ repositories {
              .setTableHeadTextColor(R.color.beijin)//表头字体颜色
              .setTableContentTextColor(R.color.border_color)//单元格字体颜色
              .setNullableString("N/A") //空值替换值
+             .setTableViewListener(new LockTableView.OnTableViewListener() {
+                   @Override
+                   public void onTableViewScrollChange(int x, int y) {
+                       Log.e("滚动值","["+x+"]"+"["+y+"]");
+                   }
+               })//设置滚动回调监听
              .show(); //显示表格,此方法必须调用
+
+             //属性值获取
+      Log.e("每列最大宽度(dp)",mLockTableView.getColumnMaxWidths().toString());
+      Log.e("每行最大高度(dp)",mLockTableView.getRowMaxHeights().toString());
+      Log.e("表格所有的滚动视图",mLockTableView.getScrollViews().toString());
+      Log.e("表格头部固定视图(锁列)",mLockTableView.getLockHeadView().toString());
+      Log.e("表格头部固定视图(不锁列)",mLockTableView.getUnLockHeadView().toString());
 
 
      /**
@@ -121,6 +137,10 @@ private int mTableHeadTextColor;
  * 表格内容字体颜色
  */
 private int mTableContentTextColor;
+/**
+ * 表格监听事件
+ */
+private OnTableViewListener mTableViewListener;
 
 ```
 
