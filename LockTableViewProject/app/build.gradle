@@ -4,12 +4,16 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
     defaultConfig {
+        multiDexEnabled true //dex优化
         applicationId "com.rmondjone.locktableviewproject"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 2
         versionName "1.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    dexOptions {
+        javaMaxHeapSize "4g" //修改堆栈内存大小
     }
     buildTypes {
         release {
@@ -32,6 +36,6 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.0.0'
     testCompile 'junit:junit:4.12'
-    compile project(':locktableview')
-//    compile 'com.github.RmondJone:LockTableView:1.0.1'
+//    compile project(':locktableview')
+    compile 'com.github.RmondJone:LockTableView:1.0.2'
 }
