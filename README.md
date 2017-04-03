@@ -6,6 +6,10 @@
 
 ## 更新日志
 * 2017年04月01日13:02:01----------LockTableView V1.0.0
+* 2017年04月01日17:33:16----------LockTableView V1.0.1
+  BUG修改，数据过多时会引起堆栈内存溢出，重新设计了一下，已经解决
+* 2017年04月03日11:46:53----------LockTableView V1.0.2
+  BUG修改，缺省值BUG修改，自适应行高属性新增
 
 ## 工程集成说明
 * 第一步
@@ -32,7 +36,7 @@ repositories {
 * 第二步
 ```java
   dependencies {
-		compile 'com.github.RmondJone:LockTableView:1.0.0'
+		compile 'com.github.RmondJone:LockTableView:1.0.2'
 	}
 ```
 
@@ -45,6 +49,8 @@ repositories {
              .setLockFristRow(true) //是否锁定第一行
              .setMaxColumnWidth(100) //列最大宽度
              .setMinColumnWidth(70) //列最小宽度
+             .setMinRowHeight(20)//行最小高度
+             .setMaxRowHeight(60)//行最大高度
              .setTextViewSize(16) //单元格字体大小
              .setFristRowBackGroudColor(R.color.table_head)//表头背景色
              .setTableHeadTextColor(R.color.beijin)//表头字体颜色
@@ -87,6 +93,14 @@ private int maxColumnWidth;
  * 最小列宽(dp)
  */
 private int minColumnWidth;
+/**
+ * 最大行高(dp)
+ */
+private int maxRowHeight;
+/**
+  * 最小行高dp)
+  */
+private int minRowHeight;
 /**
  * 第一行背景颜色
  */

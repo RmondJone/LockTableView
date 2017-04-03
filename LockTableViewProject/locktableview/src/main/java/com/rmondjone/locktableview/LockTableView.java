@@ -1,7 +1,10 @@
 package com.rmondjone.locktableview;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.support.v4.content.ContextCompat;
+import android.text.Layout;
+import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.Log;
 import android.util.TypedValue;
@@ -11,8 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +61,14 @@ public class LockTableView {
      */
     private int minColumnWidth;
     /**
+     * 最大行高(dp)
+     */
+    private int maxRowHeight;
+    /**
+     * 最小行高dp)
+     */
+    private int minRowHeight;
+    /**
      * 第一行背景颜色
      */
     private int mFristRowBackGroudColor;
@@ -102,6 +111,10 @@ public class LockTableView {
      * 记录每列最大宽度
      */
     private ArrayList<Integer> mColumnMaxWidths = new ArrayList<Integer>();
+    /**
+     * 记录每行最大高度
+     */
+    private ArrayList<Integer> mRowMaxHeights = new ArrayList<Integer>();
     /**
      * 把所有的滚动视图放图列表，后面实现联动效果
      */
@@ -156,6 +169,8 @@ public class LockTableView {
         mTableView = LayoutInflater.from(mContext).inflate(R.layout.locktableview, null);
         maxColumnWidth = 100;
         minColumnWidth = 70;
+        minRowHeight=20;
+        maxRowHeight=60;
         mNullableString = "N/A";
         mTableHeadTextColor = R.color.beijin;
         mTableContentTextColor = R.color.border_color;
@@ -192,15 +207,27 @@ public class LockTableView {
                 }
                 mTableDatas.set(i, rowDatas);
             }
+//            Log.e("每行最多个数",maxLength+"");
             for (int i = 0; i < mTableDatas.size(); i++) {
                 ArrayList<String> rowDatas = mTableDatas.get(i);
                 if (rowDatas.size() < maxLength) {
-                    for (int j = 0; j < maxLength - rowDatas.size(); j++) {
+                    int size=maxLength - rowDatas.size();
+                    for (int j = 0; j <size; j++) {
                         rowDatas.add(mNullableString);
                     }
                     mTableDatas.set(i, rowDatas);
                 }
             }
+
+//            //测试
+//            for (int i=0;i<mTableDatas.size();i++){
+//                ArrayList<String> rowDatas=mTableDatas.get(i);
+//                StringBuffer b=new StringBuffer();
+//                for (String str:rowDatas){
+//                    b.append("["+str+"]");
+//                }
+//                Log.e("第"+i+"行数据",b.toString()+"/"+rowDatas.size()+"个");
+//            }
             //初始化每列最大宽度
             for (int i = 0; i < mTableDatas.size(); i++) {
                 ArrayList<String> rowDatas = mTableDatas.get(i);
@@ -229,17 +256,33 @@ public class LockTableView {
                 }
 //                Log.e("第"+i+"行列最大宽度",buffer.toString());
             }
-//            Log.e("每列最大宽度",mColumnMaxWidths.toString());
+//            Log.e("每列最大宽度dp:",mColumnMaxWidths.toString());
 
-//            //测试
-//            for (int i=0;i<mTableDatas.size();i++){
-//                ArrayList<String> rowDatas=mTableDatas.get(i);
-//                StringBuffer b=new StringBuffer();
-//                for (String str:rowDatas){
-//                    b.append("["+str+"]");
-//                }
-//                Log.e("第"+i+"行数据",b.toString());
-//            }
+            //初始化每行最大高度
+            for (int i = 0; i < mTableDatas.size(); i++) {
+                ArrayList<String> rowDatas = mTableDatas.get(i);
+                StringBuffer buffer = new StringBuffer();
+
+                TextView textView = new TextView(mContext);
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, mTextViewSize);
+                textView.setGravity(Gravity.CENTER);
+                //设置布局
+                LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                textViewParams.setMargins(45, 45, 45, 45);//android:layout_margin="15dp"
+                textView.setLayoutParams(textViewParams);
+                int maxHeight=measureTextHeight(textView,rowDatas.get(0));
+                mRowMaxHeights.add(maxHeight);
+                for (int j = 0; j < rowDatas.size(); j++) {
+                    int currentHeight=measureTextHeight(textView,rowDatas.get(j));
+                    buffer.append("["+currentHeight+"]");
+                    if (currentHeight>maxHeight){
+                        mRowMaxHeights.set(i,currentHeight);
+                    }
+                }
+//                Log.e("第"+i+"行高度",buffer.toString());
+            }
+//            Log.e("每行最大高度dp:",mRowMaxHeights.toString());
 
             if (isLockFristRow) {
                 ArrayList<String> fristRowDatas = mTableDatas.get(0);
@@ -370,7 +413,7 @@ public class LockTableView {
             LinearLayout textViewContainer=new LinearLayout(mContext);
             LinearLayout.LayoutParams textLinearParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
-            textViewContainer.setOrientation(LinearLayout.VERTICAL);
+            textViewContainer.setOrientation(LinearLayout.HORIZONTAL);
             textViewContainer.setLayoutParams(textLinearParams);
             //构造TextView
             TextView textView=new TextView(mContext);
@@ -384,6 +427,11 @@ public class LockTableView {
             textView.setGravity(Gravity.CENTER);
             ViewGroup.LayoutParams layoutParams = textView.getLayoutParams();
             layoutParams.width = DisplayUtil.dip2px(mContext, mColumnMaxWidths.get(0));
+            if (isLockFristRow){
+                layoutParams.height=DisplayUtil.dip2px(mContext,mRowMaxHeights.get(i+1));
+            }else{
+                layoutParams.height=DisplayUtil.dip2px(mContext,mRowMaxHeights.get(i));
+            }
             textView.setLayoutParams(layoutParams);
             if (!isLockFristRow){
                 if (i==0){
@@ -444,6 +492,11 @@ public class LockTableView {
                 LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
                 textViewParams.setMargins(45, 45, 45, 45);
+                if (isLockFristRow){
+                    textViewParams.height=DisplayUtil.dip2px(mContext,mRowMaxHeights.get(i+1));
+                }else{
+                    textViewParams.height=DisplayUtil.dip2px(mContext,mRowMaxHeights.get(i));
+                }
                 textView.setLayoutParams(textViewParams);
                 ViewGroup.LayoutParams textViewParamsCopy = textView.getLayoutParams();
                 textViewParamsCopy.width = DisplayUtil.dip2px(mContext, mColumnMaxWidths.get(j+1));
@@ -531,6 +584,11 @@ public class LockTableView {
                 LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
                 textViewParams.setMargins(45, 45, 45, 45);
+                if (isLockFristRow){
+                    textViewParams.height=DisplayUtil.dip2px(mContext,mRowMaxHeights.get(i+1));
+                }else{
+                    textViewParams.height=DisplayUtil.dip2px(mContext,mRowMaxHeights.get(i));
+                }
                 textView.setLayoutParams(textViewParams);
                 ViewGroup.LayoutParams textViewParamsCopy = textView.getLayoutParams();
                 textViewParamsCopy.width = DisplayUtil.dip2px(mContext, mColumnMaxWidths.get(j));
@@ -613,7 +671,46 @@ public class LockTableView {
     }
 
     /**
-     * 根据文字计算textview的宽度
+     * 计算TextView高度
+     * @param textView
+     * @param text
+     * @return
+     */
+    private int measureTextHeight(TextView textView,String text){
+        if (textView != null) {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) textView.getLayoutParams();
+            int height = getTextViewHeight(textView, text);
+            if (height<minRowHeight){
+                return minRowHeight;
+            }else if(height>minRowHeight&&height<maxRowHeight){
+                return height;
+            }else{
+                return maxRowHeight;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * 根据文字计算textview的高度
+     *
+     * @param textView
+     * @param text
+     * @return
+     */
+    private int getTextViewHeight(TextView textView, String text) {
+        if (textView != null) {
+            int width=measureTextWidth(textView,text);
+            TextPaint textPaint  = textView.getPaint();
+            StaticLayout staticLayout = new StaticLayout(text, textPaint, DisplayUtil.dip2px(mContext,width), Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
+            int height=DisplayUtil.px2dip(mContext,staticLayout.getHeight());
+            return height;
+        }
+        return 0;
+    }
+
+    /**
+     * 根据文字计算textview的高度
      *
      * @param view
      * @param text
@@ -727,6 +824,16 @@ public class LockTableView {
 
     public LockTableView setTableContentTextColor(int mTableContentTextColor) {
         this.mTableContentTextColor = mTableContentTextColor;
+        return this;
+    }
+
+    public LockTableView setMaxRowHeight(int maxRowHeight) {
+        this.maxRowHeight = maxRowHeight;
+        return this;
+    }
+
+    public LockTableView setMinRowHeight(int minRowHeight) {
+        this.minRowHeight = minRowHeight;
         return this;
     }
 }
