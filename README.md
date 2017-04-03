@@ -1,5 +1,5 @@
 # LockTableView
-自定义表格,可锁定双向表头,自适应列宽,快速集成<br>
+自定义表格,可锁定双向表头,自适应列宽,自适应行高,快速集成<br>
 ## 效果展示
 
 ![image](https://github.com/RmondJone/LockTableView/blob/master/show.gif)
