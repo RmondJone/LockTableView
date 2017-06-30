@@ -188,6 +188,7 @@ public class LockTableView {
     public void show() {
         initData();
         initView();
+        mContentView.removeAllViews();//清空视图
         mContentView.addView(mTableView);
     }
 
