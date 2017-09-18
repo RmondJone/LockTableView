@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
-        android:id="@+id/lockView_parent"
-        android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <com.rmondjone.xrecyclerview.XRecyclerView
+        android:id="@+id/lock_recyclerview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-    </LinearLayout>
+
+    </com.rmondjone.xrecyclerview.XRecyclerView>
+
     <View
         android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:background="@color/light_gray"
-        />
+        android:background="@color/light_gray" />
+
     <com.rmondjone.locktableview.CustomHorizontalScrollView
+        android:scrollbars="none"
         android:id="@+id/lockScrollView_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <com.rmondjone.xrecyclerview.XRecyclerView
+            android:id="@+id/main_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.rmondjone.xrecyclerview.XRecyclerView>
+
     </com.rmondjone.locktableview.CustomHorizontalScrollView>
 </LinearLayout>
