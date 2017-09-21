@@ -11,8 +11,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:id="@+id/lock_text"
-            android:layout_margin="15dp"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </LinearLayout>

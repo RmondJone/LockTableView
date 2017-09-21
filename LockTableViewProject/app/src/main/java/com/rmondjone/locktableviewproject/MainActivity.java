@@ -74,14 +74,14 @@ public class MainActivity extends AppCompatActivity {
                                 ArrayList<ArrayList<String>> mTableDatas = new ArrayList<ArrayList<String>>();
                                 ArrayList<String> mfristData = new ArrayList<String>();
                                 mfristData.add("标题");
-                                for (int i = 0; i < 4; i++) {
+                                for (int i = 0; i < 10; i++) {
                                     mfristData.add("标题" + i);
                                 }
                                 mTableDatas.add(mfristData);
                                 for (int i = 0; i < 20; i++) {
                                     ArrayList<String> mRowDatas = new ArrayList<String>();
                                     mRowDatas.add("标题" + i);
-                                    for (int j = 0; j < 4; j++) {
+                                    for (int j = 0; j < 10; j++) {
                                         mRowDatas.add("数据" + j);
                                     }
                                     mTableDatas.add(mRowDatas);

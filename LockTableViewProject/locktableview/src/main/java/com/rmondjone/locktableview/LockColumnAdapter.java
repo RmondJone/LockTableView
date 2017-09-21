@@ -73,13 +73,14 @@ public class LockColumnAdapter extends RecyclerView.Adapter<LockColumnAdapter.Lo
         //设置布局
         holder.mTextView.setText(mLockColumnDatas.get(position));
         holder.mTextView.setTextSize(mTextViewSize);
-        ViewGroup.LayoutParams layoutParams = holder.mTextView.getLayoutParams();
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.mTextView.getLayoutParams();
         layoutParams.width = DisplayUtil.dip2px(mContext, mColumnMaxWidths.get(0));
         if (isLockFristRow){
             layoutParams.height=DisplayUtil.dip2px(mContext,mRowMaxHeights.get(position+1));
         }else{
             layoutParams.height=DisplayUtil.dip2px(mContext,mRowMaxHeights.get(position));
         }
+        layoutParams.setMargins(45,45,45,45);
         holder.mTextView.setLayoutParams(layoutParams);
         //设置颜色
         if (!isLockFristRow){
