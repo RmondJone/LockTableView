@@ -29,6 +29,10 @@
 
   版本重构：1、当数据量过大引起的OOM问题。2、新增下拉刷新上拉加载功能
 
+* 2017年09月21日21:34:32----------LockTableView V1.0.6
+
+  BUG修改：低分辨率表格错位问题
+
 ## 工程集成说明
 * 第一步
 ```java
@@ -54,7 +58,7 @@ repositories {
 * 第二步
 ```java
   dependencies {
-		compile 'com.github.RmondJone:LockTableView:1.0.5'
+		compile 'com.github.RmondJone:LockTableView:1.0.6'
 	}
 ```
 
