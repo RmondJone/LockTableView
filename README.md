@@ -56,6 +56,17 @@ mLockTableView.setLockFristColumn(true) //是否锁定第一列
               Log.e("滚动值","["+x+"]"+"["+y+"]");
           }
       })//设置滚动回调监听
+      .setTableViewRangeListener(new LockTableView.OnTableViewRangeListener() {
+                    @Override
+                    public void onLeft(HorizontalScrollView view) {
+                        Log.e("滚动边界","滚动到最左边");
+                    }
+
+                    @Override
+                    public void onRight(HorizontalScrollView view) {
+                        Log.e("滚动边界","滚动到最右边");
+                    }
+                })//设置横向滚动边界监听
       .setOnLoadingListener(new LockTableView.OnLoadingListener() {//下拉刷新、上拉加载监听
           @Override
           public void onRefresh(final XRecyclerView mXRecyclerView, final ArrayList<ArrayList<String>> mTableDatas) {
@@ -184,13 +195,18 @@ private int mTableHeadTextColor;
  */
 private int mTableContentTextColor;
 /**
- * 表格监听事件
+ * 表格横向滚动监听事件
  */
 private OnTableViewListener mTableViewListener;
+/**
+ * 表格横向滚动到边界监听事件
+ */
+private OnTableViewRangeListener mTableViewRangeListener;
 /**
  * 表格上拉刷新、下拉加载监听事件
  */
 private OnLoadingListener mOnLoadingListener;
+
 
 ```
 

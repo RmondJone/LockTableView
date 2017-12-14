@@ -100,6 +100,11 @@ public class LockTableView {
     private OnTableViewListener mTableViewListener;
 
     /**
+     * 表格横向滚动到边界监听事件
+     */
+    private OnTableViewRangeListener mTableViewRangeListener;
+
+    /**
      * 表格上拉刷新、下拉加载监听事件
      */
     private OnLoadingListener mOnLoadingListener;
@@ -394,6 +399,21 @@ public class LockTableView {
                 changeAllScrollView(x, y);
             }
         });
+        mTableViewAdapter.setTableViewRangeListener(new OnTableViewRangeListener() {
+            @Override
+            public void onLeft(HorizontalScrollView view) {
+               if (mTableViewRangeListener!=null){
+                   mTableViewRangeListener.onLeft(view);
+               }
+            }
+
+            @Override
+            public void onRight(HorizontalScrollView view) {
+                if (mTableViewRangeListener!=null){
+                    mTableViewRangeListener.onRight(view);
+                }
+            }
+        });
         mTableViewAdapter.setOnTableViewCreatedListener(new TableViewAdapter.OnTableViewCreatedListener() {
             @Override
             public void onTableViewCreatedCompleted(CustomHorizontalScrollView mScrollView) {
@@ -440,6 +460,20 @@ public class LockTableView {
                 public void onScrollChanged(HorizontalScrollView scrollView, int x, int y) {
                     changeAllScrollView(x, y);
                 }
+
+                @Override
+                public void onScrollFarLeft(HorizontalScrollView scrollView) {
+                    if(mTableViewRangeListener!=null){
+                        mTableViewRangeListener.onLeft(scrollView);
+                    }
+                }
+
+                @Override
+                public void onScrollFarRight(HorizontalScrollView scrollView) {
+                    if(mTableViewRangeListener!=null){
+                        mTableViewRangeListener.onRight(scrollView);
+                    }
+                }
             });
         } else {
             createScollview(mUnLockScrollView, mTableFristData, true);
@@ -448,6 +482,20 @@ public class LockTableView {
                 @Override
                 public void onScrollChanged(HorizontalScrollView scrollView, int x, int y) {
                     changeAllScrollView(x, y);
+                }
+
+                @Override
+                public void onScrollFarLeft(HorizontalScrollView scrollView) {
+                    if(mTableViewRangeListener!=null){
+                        mTableViewRangeListener.onLeft(scrollView);
+                    }
+                }
+
+                @Override
+                public void onScrollFarRight(HorizontalScrollView scrollView) {
+                    if(mTableViewRangeListener!=null){
+                        mTableViewRangeListener.onRight(scrollView);
+                    }
                 }
             });
         }
@@ -674,6 +722,11 @@ public class LockTableView {
         return this;
     }
 
+    public LockTableView setTableViewRangeListener(OnTableViewRangeListener mTableViewRangeListener) {
+        this.mTableViewRangeListener = mTableViewRangeListener;
+        return this;
+    }
+
     //值获取
     public ArrayList<Integer> getColumnMaxWidths() {
         return mColumnMaxWidths;
@@ -728,6 +781,30 @@ public class LockTableView {
          * @param y
          */
         void onTableViewScrollChange(int x, int y);
+    }
+
+
+    /**
+     * 横向滚动视图滑动到边界的监听
+     */
+    public interface OnTableViewRangeListener{
+
+        /**
+         * 说明 最左侧
+         * 作者 郭翰林
+         * 创建时间 2017/12/14 下午4:45
+         * @param view
+         */
+        void onLeft(HorizontalScrollView view);
+
+        /**
+         * 说明 最右侧
+         * 作者 郭翰林
+         * 创建时间 2017/12/14 下午4:45
+         * @param view
+         */
+        void onRight(HorizontalScrollView view);
+
     }
 
     /**

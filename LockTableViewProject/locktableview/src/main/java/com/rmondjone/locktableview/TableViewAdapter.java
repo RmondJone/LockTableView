@@ -73,6 +73,11 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
     private LockTableView.OnTableViewListener mTableViewListener;
 
     /**
+     * 表格横向滚动到边界监听事件
+     */
+    private LockTableView.OnTableViewRangeListener mTableViewRangeListener;
+
+    /**
      * 表格视图加载完成监听事件
      */
     private OnTableViewCreatedListener mOnTableViewCreatedListener;
@@ -187,7 +192,23 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
             mScrollView.setOnScrollChangeListener(new CustomHorizontalScrollView.onScrollChangeListener() {
                 @Override
                 public void onScrollChanged(HorizontalScrollView scrollView, int x, int y) {
-                    mTableViewListener.onTableViewScrollChange(x,y);
+                    if(mTableViewListener!=null){
+                        mTableViewListener.onTableViewScrollChange(x,y);
+                    }
+                }
+
+                @Override
+                public void onScrollFarLeft(HorizontalScrollView scrollView) {
+                    if(mTableViewRangeListener!=null){
+                        mTableViewRangeListener.onLeft(scrollView);
+                    }
+                }
+
+                @Override
+                public void onScrollFarRight(HorizontalScrollView scrollView) {
+                    if(mTableViewRangeListener!=null){
+                        mTableViewRangeListener.onRight(scrollView);
+                    }
                 }
             });
         }
@@ -234,5 +255,9 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
 
     public void setOnTableViewCreatedListener(OnTableViewCreatedListener mOnTableViewCreatedListener) {
         this.mOnTableViewCreatedListener = mOnTableViewCreatedListener;
+    }
+
+    public void setTableViewRangeListener(LockTableView.OnTableViewRangeListener mTableViewRangeListener) {
+        this.mTableViewRangeListener = mTableViewRangeListener;
     }
 }

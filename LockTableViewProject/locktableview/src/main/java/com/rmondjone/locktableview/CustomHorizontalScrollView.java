@@ -2,6 +2,7 @@ package com.rmondjone.locktableview;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.widget.HorizontalScrollView;
 
 /**
@@ -26,7 +27,47 @@ public class CustomHorizontalScrollView extends HorizontalScrollView{
     }
 
     public interface onScrollChangeListener{
+        /**
+         * 滚动监听
+         * @param scrollView
+         * @param x
+         * @param y
+         */
         void onScrollChanged(HorizontalScrollView scrollView,int x,int y);
+        /**
+         * 滑动到最左侧
+         * @param scrollView
+         */
+        void onScrollFarLeft(HorizontalScrollView scrollView);
+
+        /**
+         *滑动到最右侧
+         * @param scrollView
+         */
+        void onScrollFarRight(HorizontalScrollView scrollView);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()){
+            case MotionEvent.ACTION_UP:
+                if(computeHorizontalScrollOffset()==0){
+                    //滑动最左边
+                    if(onScrollChangeListener!=null){
+                        onScrollChangeListener.onScrollFarLeft(this);
+                    }
+                }else if(computeHorizontalScrollRange()-computeHorizontalScrollOffset()
+                        ==computeHorizontalScrollExtent()){
+                    //滑动最右边
+                    if(onScrollChangeListener!=null){
+                        onScrollChangeListener.onScrollFarRight(this);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        return super.onTouchEvent(ev);
     }
 
     /**
@@ -36,6 +77,7 @@ public class CustomHorizontalScrollView extends HorizontalScrollView{
     public void setOnScrollChangeListener(CustomHorizontalScrollView.onScrollChangeListener onScrollChangeListener) {
         this.onScrollChangeListener = onScrollChangeListener;
     }
+
 
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {

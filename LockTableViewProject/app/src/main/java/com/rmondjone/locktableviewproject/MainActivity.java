@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 import com.rmondjone.locktableview.DisplayUtil;
@@ -61,7 +62,18 @@ public class MainActivity extends AppCompatActivity {
                     public void onTableViewScrollChange(int x, int y) {
                         Log.e("滚动值","["+x+"]"+"["+y+"]");
                     }
-                })//设置滚动回调监听
+                })//设置横向滚动回调监听
+                .setTableViewRangeListener(new LockTableView.OnTableViewRangeListener() {
+                    @Override
+                    public void onLeft(HorizontalScrollView view) {
+                        Log.e("滚动边界","滚动到最左边");
+                    }
+
+                    @Override
+                    public void onRight(HorizontalScrollView view) {
+                        Log.e("滚动边界","滚动到最右边");
+                    }
+                })//设置横向滚动边界监听
                 .setOnLoadingListener(new LockTableView.OnLoadingListener() {
                     @Override
                     public void onRefresh(final XRecyclerView mXRecyclerView, final ArrayList<ArrayList<String>> mTableDatas) {
