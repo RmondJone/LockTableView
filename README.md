@@ -50,13 +50,15 @@ mLockTableView.setLockFristColumn(true) //是否锁定第一列
       .setTableHeadTextColor(R.color.beijin)//表头字体颜色
       .setTableContentTextColor(R.color.border_color)//单元格字体颜色
       .setNullableString("N/A") //空值替换值
-      .setTableViewListener(new LockTableView.OnTableViewListener() {//设置横向滚动监听
+      .setTableViewListener(new LockTableView.OnTableViewListener() {
+          //设置横向滚动监听
           @Override
           public void onTableViewScrollChange(int x, int y) {
               Log.e("滚动值","["+x+"]"+"["+y+"]");
           }
-      })//设置滚动回调监听
+      })
       .setTableViewRangeListener(new LockTableView.OnTableViewRangeListener() {
+                    //设置横向滚动边界监听
                     @Override
                     public void onLeft(HorizontalScrollView view) {
                         Log.e("滚动边界","滚动到最左边");
@@ -66,8 +68,9 @@ mLockTableView.setLockFristColumn(true) //是否锁定第一列
                     public void onRight(HorizontalScrollView view) {
                         Log.e("滚动边界","滚动到最右边");
                     }
-                })//设置横向滚动边界监听
-      .setOnLoadingListener(new LockTableView.OnLoadingListener() {//下拉刷新、上拉加载监听
+                })
+      .setOnLoadingListener(new LockTableView.OnLoadingListener() {
+          //下拉刷新、上拉加载监听
           @Override
           public void onRefresh(final XRecyclerView mXRecyclerView, final ArrayList<ArrayList<String>> mTableDatas) {
               Handler handler = new Handler();
