@@ -11,7 +11,13 @@ import android.widget.HorizontalScrollView;
  * 创建时间 2017/3/31.
  */
 
-public class CustomHorizontalScrollView extends HorizontalScrollView{
+public class CustomHorizontalScrollView extends HorizontalScrollView {
+    //触摸前的点
+    private float x;
+
+    //手势抬起之后的点
+    private float x1;
+
     private onScrollChangeListener onScrollChangeListener;
 
     public CustomHorizontalScrollView(Context context) {
@@ -26,22 +32,26 @@ public class CustomHorizontalScrollView extends HorizontalScrollView{
         super(context, attrs, defStyleAttr);
     }
 
-    public interface onScrollChangeListener{
+    public interface onScrollChangeListener {
         /**
          * 滚动监听
+         *
          * @param scrollView
          * @param x
          * @param y
          */
-        void onScrollChanged(HorizontalScrollView scrollView,int x,int y);
+        void onScrollChanged(HorizontalScrollView scrollView, int x, int y);
+
         /**
          * 滑动到最左侧
+         *
          * @param scrollView
          */
         void onScrollFarLeft(HorizontalScrollView scrollView);
 
         /**
-         *滑动到最右侧
+         * 滑动到最右侧
+         *
          * @param scrollView
          */
         void onScrollFarRight(HorizontalScrollView scrollView);
@@ -49,17 +59,21 @@ public class CustomHorizontalScrollView extends HorizontalScrollView{
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        switch (ev.getAction()){
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                x = ev.getX();
+                break;
             case MotionEvent.ACTION_UP:
-                if(computeHorizontalScrollOffset()==0){
+                x1 = ev.getX();
+                if (computeHorizontalScrollOffset() == 0 && x-x1<0) {
                     //滑动最左边
-                    if(onScrollChangeListener!=null){
+                    if (onScrollChangeListener != null) {
                         onScrollChangeListener.onScrollFarLeft(this);
                     }
-                }else if(computeHorizontalScrollRange()-computeHorizontalScrollOffset()
-                        ==computeHorizontalScrollExtent()){
+                } else if (computeHorizontalScrollRange() - computeHorizontalScrollOffset()
+                        <= computeHorizontalScrollExtent() && x-x1>0) {
                     //滑动最右边
-                    if(onScrollChangeListener!=null){
+                    if (onScrollChangeListener != null) {
                         onScrollChangeListener.onScrollFarRight(this);
                     }
                 }
@@ -72,6 +86,7 @@ public class CustomHorizontalScrollView extends HorizontalScrollView{
 
     /**
      * 设置监听
+     *
      * @param onScrollChangeListener
      */
     public void setOnScrollChangeListener(CustomHorizontalScrollView.onScrollChangeListener onScrollChangeListener) {
@@ -83,8 +98,8 @@ public class CustomHorizontalScrollView extends HorizontalScrollView{
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
         //回调
-        if (onScrollChangeListener!=null){
-            onScrollChangeListener.onScrollChanged(this,l,t);
+        if (onScrollChangeListener != null) {
+            onScrollChangeListener.onScrollChanged(this, l, t);
         }
     }
 
