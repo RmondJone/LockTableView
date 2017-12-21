@@ -29,7 +29,7 @@ repositories {
 * 第二步
 ```java
   dependencies {
-		compile 'com.github.RmondJone:LockTableView:1.0.7'
+		compile 'com.github.RmondJone:LockTableView:1.0.8'
 	}
 ```
 
