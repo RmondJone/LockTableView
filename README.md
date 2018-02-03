@@ -28,9 +28,9 @@ repositories {
 
 * 第二步
 ```java
-  dependencies {
-		compile 'com.github.RmondJone:LockTableView:1.0.9'
-	}
+dependencies {
+	compile 'com.github.RmondJone:LockTableView:1.0.9'
+}
 ```
 
 ## API使用说明
@@ -73,55 +73,24 @@ mLockTableView.setLockFristColumn(true) //是否锁定第一列
           //下拉刷新、上拉加载监听
           @Override
           public void onRefresh(final XRecyclerView mXRecyclerView, final ArrayList<ArrayList<String>> mTableDatas) {
-              Handler handler = new Handler();
-              handler.postDelayed(new Runnable() {
-                  @Override
-                  public void run() {
-                      Log.e("现有表格数据", mTableDatas.toString());
-                      //构造假数据
-                      ArrayList<ArrayList<String>> mTableDatas = new ArrayList<ArrayList<String>>();
-                      ArrayList<String> mfristData = new ArrayList<String>();
-                      mfristData.add("标题");
-                      for (int i = 0; i < 4; i++) {
-                          mfristData.add("标题" + i);
-                      }
-                      mTableDatas.add(mfristData);
-                      for (int i = 0; i < 20; i++) {
-                          ArrayList<String> mRowDatas = new ArrayList<String>();
-                          mRowDatas.add("标题" + i);
-                          for (int j = 0; j < 4; j++) {
-                              mRowDatas.add("数据" + j);
-                          }
-                          mTableDatas.add(mRowDatas);
-                      }
-                      mLockTableView.setTableDatas(mTableDatas);
-                      mXRecyclerView.refreshComplete();
-                  }
-              }, 1000);
+              Log.e("表格主视图",mXRecyclerView);
+              Log.e("表格所有数据",mTableDatas);
+              //如需更新表格数据调用,部分刷新不会全部重绘
+              mLockTableView.setTableDatas(mTableDatas);
+              //停止刷新
+              mXRecyclerView.refreshComplete();
           }
 
           @Override
           public void onLoadMore(final XRecyclerView mXRecyclerView, final ArrayList<ArrayList<String>> mTableDatas) {
-              Handler handler = new Handler();
-              handler.postDelayed(new Runnable() {
-                  @Override
-                  public void run() {
-                      if (mTableDatas.size() <= 60) {
-                          for (int i = 0; i < 10; i++) {
-                              ArrayList<String> mRowDatas = new ArrayList<String>();
-                              mRowDatas.add("标题" + (mTableDatas.size() - 1));
-                              for (int j = 0; j < 10; j++) {
-                                  mRowDatas.add("数据" + j);
-                              }
-                              mTableDatas.add(mRowDatas);
-                          }
-                          mLockTableView.setTableDatas(mTableDatas);
-                      } else {
-                          mXRecyclerView.setNoMore(true);
-                      }
-                      mXRecyclerView.loadMoreComplete();
-                  }
-              }, 1000);
+              Log.e("表格主视图",mXRecyclerView);
+              Log.e("表格所有数据",mTableDatas);
+              //如需更新表格数据调用,部分刷新不会全部重绘
+              mLockTableView.setTableDatas(mTableDatas);
+              //停止刷新
+              mXRecyclerView.loadMoreComplete();
+              //如果没有更多数据调用
+              mXRecyclerView.setNoMore(true);
           }
       })
       .setOnItemClickListenter(new LockTableView.OnItemClickListenter() {
@@ -247,7 +216,7 @@ private int mOnItemSeletor;
 
 ## License
 ```java
-Copyright (c) 2018 Guohanlin 
+Copyright (c) 2018 Guohanlin
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
