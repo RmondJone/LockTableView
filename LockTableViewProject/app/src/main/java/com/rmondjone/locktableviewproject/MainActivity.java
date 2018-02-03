@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         final LockTableView mLockTableView = new LockTableView(this, mContentView, mTableDatas);
         Log.e("表格加载开始", "当前线程：" + Thread.currentThread());
         mLockTableView.setLockFristColumn(true) //是否锁定第一列
-                .setLockFristRow(false) //是否锁定第一行
+                .setLockFristRow(true) //是否锁定第一行
                 .setMaxColumnWidth(100) //列最大宽度
                 .setMinColumnWidth(60) //列最小宽度
                 .setMinRowHeight(20)//行最小高度
