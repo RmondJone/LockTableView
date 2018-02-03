@@ -1,9 +1,12 @@
 package com.rmondjone.locktableview;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,9 +81,25 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
     private LockTableView.OnTableViewRangeListener mTableViewRangeListener;
 
     /**
+     * Item点击事件
+     */
+    private LockTableView.OnItemClickListenter mOnItemClickListenter;
+
+    /**
+     * Item长按事件
+     */
+    private LockTableView.OnItemLongClickListenter mOnItemLongClickListenter;
+
+    /**
+     * Item选中样式
+     */
+    private int mOnItemSeletor;
+
+    /**
      * 表格视图加载完成监听事件
      */
     private OnTableViewCreatedListener mOnTableViewCreatedListener;
+
 
     /**
      * 锁定视图Adapter
@@ -101,33 +120,33 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
      * @param mTableDatas
      * @param isLockColumn
      */
-    public TableViewAdapter(Context mContext, ArrayList<String> mLockColumnDatas, ArrayList<ArrayList<String>> mTableDatas, boolean isLockColumn,boolean isLockRow) {
+    public TableViewAdapter(Context mContext, ArrayList<String> mLockColumnDatas, ArrayList<ArrayList<String>> mTableDatas, boolean isLockColumn, boolean isLockRow) {
         this.mContext = mContext;
         this.mLockColumnDatas = mLockColumnDatas;
         this.mTableDatas = mTableDatas;
         this.isLockColumn = isLockColumn;
-        this.isLockFristRow=isLockRow;
+        this.isLockFristRow = isLockRow;
     }
 
 
     @Override
     public TableViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        TableViewHolder mTableViewHolder = new TableViewHolder(LayoutInflater.from(mContext).inflate(R.layout.locktablecontentview,null));
-        if (mOnTableViewCreatedListener!=null){
+        TableViewHolder mTableViewHolder = new TableViewHolder(LayoutInflater.from(mContext).inflate(R.layout.locktablecontentview, null));
+        if (mOnTableViewCreatedListener != null) {
             mOnTableViewCreatedListener.onTableViewCreatedCompleted(mTableViewHolder.mScrollView);
         }
         return mTableViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(TableViewHolder holder, int position) {
+    public void onBindViewHolder(final TableViewHolder holder, int position) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         if (isLockColumn) {
             //构造锁定视图
             holder.mLockRecyclerView.setVisibility(View.VISIBLE);
-            if (mLockAdapter==null){
-                mLockAdapter=new LockColumnAdapter(mContext,mLockColumnDatas);
+            if (mLockAdapter == null) {
+                mLockAdapter = new LockColumnAdapter(mContext, mLockColumnDatas);
                 mLockAdapter.setRowMaxHeights(mRowMaxHeights);
                 mLockAdapter.setColumnMaxWidths(mColumnMaxWidths);
                 mLockAdapter.setTextViewSize(mTextViewSize);
@@ -135,21 +154,50 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
                 mLockAdapter.setFristRowBackGroudColor(mFristRowBackGroudColor);
                 mLockAdapter.setTableHeadTextColor(mTableHeadTextColor);
                 mLockAdapter.setTableContentTextColor(mTableContentTextColor);
+                mLockAdapter.setOnItemSelectedListenter(new OnItemSelectedListenter() {
+                    @Override
+                    public void onItemSelected(View view, int position) {
+                        RecyclerView.LayoutManager mLockLayoutManager = holder.mLockRecyclerView.getLayoutManager();
+                        int itemCount=mLockLayoutManager.getItemCount();
+                        View item=mLockLayoutManager.getChildAt(position+1);
+                        item.setBackgroundColor(ContextCompat.getColor(mContext,mOnItemSeletor));
+                        for(int i=0;i<itemCount;i++){
+                            if(i!=position){
+                                mLockLayoutManager.getChildAt(i+1).setBackgroundColor(Color.TRANSPARENT);
+                            }
+                        }
+                        RecyclerView.LayoutManager mUnLockLayoutManager = holder.mMainRecyclerView.getLayoutManager();
+                        int itemUnLockCount=mUnLockLayoutManager.getItemCount();
+                        View mUnlockItem=mUnLockLayoutManager.getChildAt(position+1);
+                        mUnlockItem.setBackgroundColor(ContextCompat.getColor(mContext,mOnItemSeletor));
+                        for(int i=0;i<itemUnLockCount;i++){
+                            if(i!=position){
+                                mUnLockLayoutManager.getChildAt(i+1).setBackgroundColor(Color.TRANSPARENT);
+                            }
+                        }
+                    }
+                });
+                if (mOnItemClickListenter != null) {
+                    mLockAdapter.setOnItemClickListenter(mOnItemClickListenter);
+                }
+                if (mOnItemLongClickListenter != null) {
+                    mLockAdapter.setOnItemLongClickListenter(mOnItemLongClickListenter);
+                }
                 holder.mLockRecyclerView.setPullRefreshEnabled(false);
                 holder.mLockRecyclerView.setLoadingMoreEnabled(false);
                 holder.mLockRecyclerView.setLayoutManager(layoutManager);
                 holder.mLockRecyclerView.addItemDecoration(new DividerItemDecoration(mContext
-                        ,DividerItemDecoration.VERTICAL));
+                        , DividerItemDecoration.VERTICAL));
                 holder.mLockRecyclerView.setAdapter(mLockAdapter);
-            }else{
+            } else {
                 mLockAdapter.notifyDataSetChanged();
             }
         } else {
             holder.mLockRecyclerView.setVisibility(View.GONE);
         }
         //构造主表格视图
-        if (mUnLockAdapter==null){
-            mUnLockAdapter=new UnLockColumnAdapter(mContext,mTableDatas);
+        if (mUnLockAdapter == null) {
+            mUnLockAdapter = new UnLockColumnAdapter(mContext, mTableDatas);
             mUnLockAdapter.setColumnMaxWidths(mColumnMaxWidths);
             mUnLockAdapter.setRowMaxHeights(mRowMaxHeights);
             mUnLockAdapter.setTextViewSize(mTextViewSize);
@@ -158,15 +206,44 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
             mUnLockAdapter.setTableHeadTextColor(mTableHeadTextColor);
             mUnLockAdapter.setTableContentTextColor(mTableContentTextColor);
             mUnLockAdapter.setLockFristColumn(isLockColumn);
+            mUnLockAdapter.setOnItemSelectedListenter(new OnItemSelectedListenter() {
+                @Override
+                public void onItemSelected(View view, int position) {
+                    RecyclerView.LayoutManager mLockLayoutManager = holder.mLockRecyclerView.getLayoutManager();
+                    int itemCount=mLockLayoutManager.getItemCount();
+                    View item=mLockLayoutManager.getChildAt(position+1);
+                    item.setBackgroundColor(ContextCompat.getColor(mContext,mOnItemSeletor));
+                    for(int i=0;i<itemCount;i++){
+                        if(i!=position){
+                            mLockLayoutManager.getChildAt(i+1).setBackgroundColor(Color.TRANSPARENT);
+                        }
+                    }
+                    RecyclerView.LayoutManager mUnLockLayoutManager = holder.mMainRecyclerView.getLayoutManager();
+                    int itemUnLockCount=mUnLockLayoutManager.getItemCount();
+                    View mUnlockItem=mUnLockLayoutManager.getChildAt(position+1);
+                    mUnlockItem.setBackgroundColor(ContextCompat.getColor(mContext,mOnItemSeletor));
+                    for(int i=0;i<itemUnLockCount;i++){
+                        if(i!=position){
+                            mUnLockLayoutManager.getChildAt(i+1).setBackgroundColor(Color.TRANSPARENT);
+                        }
+                    }
+                }
+            });
+            if (mOnItemClickListenter != null) {
+                mUnLockAdapter.setOnItemClickListenter(mOnItemClickListenter);
+            }
+            if (mOnItemLongClickListenter != null) {
+                mUnLockAdapter.setOnItemLongClickListenter(mOnItemLongClickListenter);
+            }
             holder.mMainRecyclerView.setPullRefreshEnabled(false);
             holder.mMainRecyclerView.setLoadingMoreEnabled(false);
             LinearLayoutManager unlockLayoutManager = new LinearLayoutManager(mContext);
             unlockLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             holder.mMainRecyclerView.setLayoutManager(unlockLayoutManager);
             holder.mMainRecyclerView.addItemDecoration(new DividerItemDecoration(mContext
-                    ,DividerItemDecoration.VERTICAL));
+                    , DividerItemDecoration.VERTICAL));
             holder.mMainRecyclerView.setAdapter(mUnLockAdapter);
-        }else{
+        } else {
             mUnLockAdapter.notifyDataSetChanged();
         }
     }
@@ -185,28 +262,28 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
             super(itemView);
             mLockRecyclerView = (XRecyclerView) itemView.findViewById(R.id.lock_recyclerview);
             mMainRecyclerView = (XRecyclerView) itemView.findViewById(R.id.main_recyclerview);
-            //解决下拉刷新滑动冲突
+            //解决滑动冲突，只保留最外层RecyclerView的下拉和上拉事件
             mLockRecyclerView.setFocusable(false);
             mMainRecyclerView.setFocusable(false);
             mScrollView = (CustomHorizontalScrollView) itemView.findViewById(R.id.lockScrollView_parent);
             mScrollView.setOnScrollChangeListener(new CustomHorizontalScrollView.onScrollChangeListener() {
                 @Override
                 public void onScrollChanged(HorizontalScrollView scrollView, int x, int y) {
-                    if(mTableViewListener!=null){
-                        mTableViewListener.onTableViewScrollChange(x,y);
+                    if (mTableViewListener != null) {
+                        mTableViewListener.onTableViewScrollChange(x, y);
                     }
                 }
 
                 @Override
                 public void onScrollFarLeft(HorizontalScrollView scrollView) {
-                    if(mTableViewRangeListener!=null){
+                    if (mTableViewRangeListener != null) {
                         mTableViewRangeListener.onLeft(scrollView);
                     }
                 }
 
                 @Override
                 public void onScrollFarRight(HorizontalScrollView scrollView) {
-                    if(mTableViewRangeListener!=null){
+                    if (mTableViewRangeListener != null) {
                         mTableViewRangeListener.onRight(scrollView);
                     }
                 }
@@ -217,11 +294,18 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
     /**
      * 表格创建完成回调
      */
-    public interface OnTableViewCreatedListener{
+    public interface OnTableViewCreatedListener {
         /**
-         *  返回当前横向滚动视图给上个界面
+         * 返回当前横向滚动视图给上个界面
          */
-         void onTableViewCreatedCompleted(CustomHorizontalScrollView mScrollView);
+        void onTableViewCreatedCompleted(CustomHorizontalScrollView mScrollView);
+    }
+
+    /**
+     * Item项被选中监听
+     */
+    public interface OnItemSelectedListenter {
+        void onItemSelected(View view, int position);
     }
 
     //取得每行每列应用高宽
@@ -259,5 +343,17 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
 
     public void setTableViewRangeListener(LockTableView.OnTableViewRangeListener mTableViewRangeListener) {
         this.mTableViewRangeListener = mTableViewRangeListener;
+    }
+
+    public void setOnItemClickListenter(LockTableView.OnItemClickListenter mOnItemClickListenter) {
+        this.mOnItemClickListenter = mOnItemClickListenter;
+    }
+
+    public void setOnItemLongClickListenter(LockTableView.OnItemLongClickListenter mOnItemLongClickListenter) {
+        this.mOnItemLongClickListenter = mOnItemLongClickListenter;
+    }
+
+    public void setOnItemSeletor(int mOnItemSeletor) {
+        this.mOnItemSeletor = mOnItemSeletor;
     }
 }

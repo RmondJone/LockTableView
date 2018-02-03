@@ -2,6 +2,7 @@ package com.rmondjone.locktableview;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -108,6 +109,19 @@ public class LockTableView {
      * 表格上拉刷新、下拉加载监听事件
      */
     private OnLoadingListener mOnLoadingListener;
+    /**
+     * Item点击事件
+     */
+    private OnItemClickListenter mOnItemClickListenter;
+    /**
+     * Item长按事件
+     */
+    private OnItemLongClickListenter mOnItemLongClickListenter;
+    /**
+     * Item选中样式
+     */
+    private int mOnItemSeletor;
+
 
     //表格数据
     /**
@@ -395,10 +409,20 @@ public class LockTableView {
         mTableViewAdapter.setHorizontalScrollView(new OnTableViewListener() {
             @Override
             public void onTableViewScrollChange(int x, int y) {
-//                Log.e("横向滚动监听","["+x+"] "+"["+y+"]");
                 changeAllScrollView(x, y);
             }
         });
+        if(mOnItemClickListenter!=null){
+            mTableViewAdapter.setOnItemClickListenter(mOnItemClickListenter);
+        }
+        if(mOnItemLongClickListenter!=null){
+            mTableViewAdapter.setOnItemLongClickListenter(mOnItemLongClickListenter);
+        }
+        if(mOnItemSeletor!=0){
+            mTableViewAdapter.setOnItemSeletor(mOnItemSeletor);
+        }else{
+            mTableViewAdapter.setOnItemSeletor(R.color.dashline_color);
+        }
         mTableViewAdapter.setTableViewRangeListener(new OnTableViewRangeListener() {
             @Override
             public void onLeft(HorizontalScrollView view) {
@@ -727,6 +751,21 @@ public class LockTableView {
         return this;
     }
 
+    public LockTableView setOnItemClickListenter(OnItemClickListenter mOnItemClickListenter) {
+        this.mOnItemClickListenter = mOnItemClickListenter;
+        return this;
+    }
+
+    public LockTableView setOnItemLongClickListenter(OnItemLongClickListenter mOnItemLongClickListenter) {
+        this.mOnItemLongClickListenter = mOnItemLongClickListenter;
+        return this;
+    }
+
+    public LockTableView setOnItemSeletor(int mOnItemSeletor) {
+        this.mOnItemSeletor = mOnItemSeletor;
+        return this;
+    }
+
     //值获取
     public ArrayList<Integer> getColumnMaxWidths() {
         return mColumnMaxWidths;
@@ -831,5 +870,34 @@ public class LockTableView {
          * @param mTableDatas
          */
         void onLoadMore(XRecyclerView mXRecyclerView, ArrayList<ArrayList<String>> mTableDatas);
+    }
+
+
+    /**
+     * 说明 Item点击事件
+     * 作者 郭翰林
+     * 创建时间 2018/2/2 下午4:50
+     */
+    public interface OnItemClickListenter{
+
+        /**
+         * @param item 点击项
+         * @param position 点击位置
+         */
+         void onItemClick(View item,int position);
+    }
+
+    /**
+     * 说明 Item长按事件
+     * 作者 郭翰林
+     * 创建时间 2018/2/2 下午4:50
+     */
+    public interface OnItemLongClickListenter{
+
+        /**
+         * @param item 点击项
+         * @param position 点击位置
+         */
+        void onItemLongClick(View item,int position);
     }
 }

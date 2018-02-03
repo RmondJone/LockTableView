@@ -202,7 +202,7 @@ public class ArrowRefreshHeader extends LinearLayout implements BaseRefreshHeade
         }
         // refreshing and header isn't shown fully. do nothing.
         if (mState == STATE_REFRESHING && height <=  mMeasuredHeight) {
-            //return;
+//            return false;
         }
         if (mState != STATE_REFRESHING) {
             smoothScrollTo(0);

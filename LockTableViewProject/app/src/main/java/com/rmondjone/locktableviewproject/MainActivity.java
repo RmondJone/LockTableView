@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.rmondjone.locktableview.DisplayUtil;
 import com.rmondjone.locktableview.LockTableView;
@@ -47,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         final LockTableView mLockTableView = new LockTableView(this, mContentView, mTableDatas);
         Log.e("表格加载开始", "当前线程：" + Thread.currentThread());
         mLockTableView.setLockFristColumn(true) //是否锁定第一列
-                .setLockFristRow(true) //是否锁定第一行
+                .setLockFristRow(false) //是否锁定第一行
                 .setMaxColumnWidth(100) //列最大宽度
                 .setMinColumnWidth(60) //列最小宽度
                 .setMinRowHeight(20)//行最小高度
@@ -60,18 +62,18 @@ public class MainActivity extends AppCompatActivity {
                 .setTableViewListener(new LockTableView.OnTableViewListener() {
                     @Override
                     public void onTableViewScrollChange(int x, int y) {
-                        Log.e("滚动值","["+x+"]"+"["+y+"]");
+//                        Log.e("滚动值","["+x+"]"+"["+y+"]");
                     }
                 })//设置横向滚动回调监听
                 .setTableViewRangeListener(new LockTableView.OnTableViewRangeListener() {
                     @Override
                     public void onLeft(HorizontalScrollView view) {
-                        Log.e("滚动边界","滚动到最左边");
+//                        Log.e("滚动边界","滚动到最左边");
                     }
 
                     @Override
                     public void onRight(HorizontalScrollView view) {
-                        Log.e("滚动边界","滚动到最右边");
+//                        Log.e("滚动边界","滚动到最右边");
                     }
                 })//设置横向滚动边界监听
                 .setOnLoadingListener(new LockTableView.OnLoadingListener() {
@@ -81,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                Log.e("现有表格数据", mTableDatas.toString());
+//                                Log.e("现有表格数据", mTableDatas.toString());
                                 //构造假数据
                                 ArrayList<ArrayList<String>> mTableDatas = new ArrayList<ArrayList<String>>();
                                 ArrayList<String> mfristData = new ArrayList<String>();
@@ -128,6 +130,19 @@ public class MainActivity extends AppCompatActivity {
                         }, 1000);
                     }
                 })
+                .setOnItemClickListenter(new LockTableView.OnItemClickListenter() {
+                    @Override
+                    public void onItemClick(View item, int position) {
+                        Log.e("点击事件",position+"");
+                    }
+                })
+                .setOnItemLongClickListenter(new LockTableView.OnItemLongClickListenter() {
+                    @Override
+                    public void onItemLongClick(View item, int position) {
+                        Log.e("长按事件",position+"");
+                    }
+                })
+                .setOnItemSeletor(R.color.dashline_color)//设置Item被选中颜色
                 .show(); //显示表格,此方法必须调用
         mLockTableView.getTableScrollView().setPullRefreshEnabled(true);
         mLockTableView.getTableScrollView().setLoadingMoreEnabled(true);

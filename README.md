@@ -124,6 +124,19 @@ mLockTableView.setLockFristColumn(true) //是否锁定第一列
               }, 1000);
           }
       })
+      .setOnItemClickListenter(new LockTableView.OnItemClickListenter() {
+          @Override
+          public void onItemClick(View item, int position) {
+              Log.e("点击事件",position+"");
+          }
+      })
+      .setOnItemLongClickListenter(new LockTableView.OnItemLongClickListenter() {
+          @Override
+          public void onItemLongClick(View item, int position) {
+             Log.e("长按事件",position+"");
+          }
+      })
+      .setOnItemSeletor(R.color.dashline_color)//设置Item被选中颜色
       .show(); //显示表格,此方法必须调用
 mLockTableView.getTableScrollView().setPullRefreshEnabled(true);
 mLockTableView.getTableScrollView().setLoadingMoreEnabled(true);
@@ -209,6 +222,18 @@ private OnTableViewRangeListener mTableViewRangeListener;
  * 表格上拉刷新、下拉加载监听事件
  */
 private OnLoadingListener mOnLoadingListener;
+/**
+ * Item点击事件
+ */
+private OnItemClickListenter mOnItemClickListenter;
+/**
+ * Item长按事件
+ */
+private OnItemLongClickListenter mOnItemLongClickListenter;
+/**
+ * Item选中颜色
+ */
+private int mOnItemSeletor;
 
 
 ```

@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -242,12 +243,16 @@ public class XRecyclerView extends RecyclerView {
             } else {
                 lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
             }
+
             if (layoutManager.getChildCount() > 0
                     && lastVisibleItemPosition >= layoutManager.getItemCount() - 1
-                    //视图Item总数是否大于页面可以看到的Item数
-//                    && layoutManager.getItemCount() > layoutManager.getChildCount()
+                    //因为我的控件里layoutManager.getItemCount()永远等于1(item),layoutManager.getChildCount()
+                    //永远等于2(刷新头和item),所以这个条件永远不成立，永远调不了上拉加载事件,需要注释掉
+                    //&& layoutManager.getItemCount() > layoutManager.getChildCount()
                     && !isNoMore
-                    && mRefreshHeader.getState() < ArrowRefreshHeader.STATE_REFRESHING) {
+                    && mRefreshHeader.getState() < ArrowRefreshHeader.STATE_REFRESHING
+                    //只有当更多底部视图显示在页面上才开始进行加载更多数据
+                    &&lastVisibleItemPosition>=2) {
                 isLoadingData = true;
                 if (mFootView instanceof LoadingMoreFooter) {
                     ((LoadingMoreFooter) mFootView).setState(LoadingMoreFooter.STATE_LOADING);

@@ -1,6 +1,7 @@
 package com.rmondjone.locktableview;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
@@ -64,6 +65,21 @@ public class UnLockColumnAdapter extends RecyclerView.Adapter<UnLockColumnAdapte
     private boolean isLockFristColumn = true;
 
     /**
+     * Item点击事件
+     */
+    private LockTableView.OnItemClickListenter mOnItemClickListenter;
+
+    /**
+     * Item长按事件
+     */
+    private LockTableView.OnItemLongClickListenter mOnItemLongClickListenter;
+
+    /**
+     * Item项被选中监听(处理被选中的效果)
+     */
+    private TableViewAdapter.OnItemSelectedListenter mOnItemSelectedListenter;
+
+    /**
      * 构造方法
      *
      * @param mContext
@@ -87,7 +103,7 @@ public class UnLockColumnAdapter extends RecyclerView.Adapter<UnLockColumnAdapte
     }
 
     @Override
-    public void onBindViewHolder(UnLockViewHolder holder, int position) {
+    public void onBindViewHolder(UnLockViewHolder holder, final int position) {
         ArrayList<String> datas = mTableDatas.get(position);
         if (isLockFristRow) {
             //第一行是锁定的
@@ -99,6 +115,62 @@ public class UnLockColumnAdapter extends RecyclerView.Adapter<UnLockColumnAdapte
             } else {
                 createRowView(holder.mLinearLayout, datas, false, mRowMaxHeights.get(position));
             }
+        }
+        //添加事件
+        if(mOnItemClickListenter!=null){
+            holder.mLinearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mOnItemSelectedListenter!=null){
+                        mOnItemSelectedListenter.onItemSelected(v,position);
+                    }
+                    if(isLockFristRow){
+                        mOnItemClickListenter.onItemClick(v,position+1);
+                    }else{
+                        if(position!=0){
+                            mOnItemClickListenter.onItemClick(v,position);
+                        }
+                    }
+                }
+            });
+        }
+        if(mOnItemLongClickListenter!=null){
+            holder.mLinearLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if(mOnItemSelectedListenter!=null){
+                        mOnItemSelectedListenter.onItemSelected(v,position);
+                    }
+                    if (isLockFristRow){
+                        mOnItemLongClickListenter.onItemLongClick(v,position+1);
+                    }else{
+                        if(position!=0){
+                            mOnItemLongClickListenter.onItemLongClick(v,position);
+                        }
+                    }
+                    return true;
+                }
+            });
+        }
+        //如果没有设置点击事件和长按事件
+        if(mOnItemClickListenter==null&&mOnItemLongClickListenter==null){
+            holder.mLinearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mOnItemSelectedListenter!=null){
+                        mOnItemSelectedListenter.onItemSelected(v,position);
+                    }
+                }
+            });
+            holder.mLinearLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if(mOnItemSelectedListenter!=null){
+                        mOnItemSelectedListenter.onItemSelected(v,position);
+                    }
+                    return true;
+                }
+            });
         }
     }
 
@@ -139,6 +211,18 @@ public class UnLockColumnAdapter extends RecyclerView.Adapter<UnLockColumnAdapte
 
     public void setLockFristColumn(boolean lockFristColumn) {
         isLockFristColumn = lockFristColumn;
+    }
+
+    public void setOnItemClickListenter(LockTableView.OnItemClickListenter mOnItemClickListenter) {
+        this.mOnItemClickListenter = mOnItemClickListenter;
+    }
+
+    public void setOnItemLongClickListenter(LockTableView.OnItemLongClickListenter mOnItemLongClickListenter) {
+        this.mOnItemLongClickListenter = mOnItemLongClickListenter;
+    }
+
+    public void setOnItemSelectedListenter(TableViewAdapter.OnItemSelectedListenter mOnItemSelectedListenter) {
+        this.mOnItemSelectedListenter = mOnItemSelectedListenter;
     }
 
     class UnLockViewHolder extends RecyclerView.ViewHolder {
