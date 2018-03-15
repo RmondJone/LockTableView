@@ -4,12 +4,12 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <com.rmondjone.xrecyclerview.XRecyclerView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/lock_recyclerview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-    </com.rmondjone.xrecyclerview.XRecyclerView>
+    </android.support.v7.widget.RecyclerView>
 
     <View
         android:layout_width="1dp"
@@ -22,12 +22,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.rmondjone.xrecyclerview.XRecyclerView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/main_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        </com.rmondjone.xrecyclerview.XRecyclerView>
+        </android.support.v7.widget.RecyclerView>
 
     </com.rmondjone.locktableview.CustomHorizontalScrollView>
 </LinearLayout>

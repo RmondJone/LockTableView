@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 .setLockFristRow(true) //是否锁定第一行
                 .setMaxColumnWidth(100) //列最大宽度
                 .setMinColumnWidth(60) //列最小宽度
+                .setColumnWidth(1,60) //设置指定列文本宽度
                 .setMinRowHeight(20)//行最小高度
                 .setMaxRowHeight(60)//行最大高度
                 .setTextViewSize(16) //单元格字体大小
@@ -68,12 +69,12 @@ public class MainActivity extends AppCompatActivity {
                 .setTableViewRangeListener(new LockTableView.OnTableViewRangeListener() {
                     @Override
                     public void onLeft(HorizontalScrollView view) {
-//                        Log.e("滚动边界","滚动到最左边");
+                        Log.e("滚动边界","滚动到最左边");
                     }
 
                     @Override
                     public void onRight(HorizontalScrollView view) {
-//                        Log.e("滚动边界","滚动到最右边");
+                        Log.e("滚动边界","滚动到最右边");
                     }
                 })//设置横向滚动边界监听
                 .setOnLoadingListener(new LockTableView.OnLoadingListener() {

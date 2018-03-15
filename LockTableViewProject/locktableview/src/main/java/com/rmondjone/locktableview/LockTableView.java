@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.text.method.NumberKeyListener;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -183,6 +184,14 @@ public class LockTableView {
      * 列表适配器
      */
     private TableViewAdapter mTableViewAdapter;
+    /**
+     * 指定要改变列数
+     */
+    private int mColumnNum = -1;
+    /**
+     * 指定要改变的列宽度(dp)
+     */
+    private int mColumnWidth = -1;
 
 
     /**
@@ -294,6 +303,10 @@ public class LockTableView {
                 }
 //                Log.e("第"+i+"行列最大宽度",buffer.toString());
             }
+            //如果用户指定某列宽度则按照用户指定宽度算
+            if (mColumnNum >= 0 && mColumnWidth > 0) {
+                changeColumnWidth(mColumnNum, mColumnWidth);
+            }
 //            Log.e("每列最大宽度dp:",mColumnMaxWidths.toString());
 
 
@@ -313,7 +326,13 @@ public class LockTableView {
                 int maxHeight = measureTextHeight(textView, rowDatas.get(0));
                 mRowMaxHeights.add(maxHeight);
                 for (int j = 0; j < rowDatas.size(); j++) {
-                    int currentHeight = measureTextHeight(textView, rowDatas.get(j));
+                    int currentHeight;
+                    //如果用户指定某列宽度则按照用户指定宽度算对应列的高度
+                    if (j == mColumnNum && mColumnWidth > 0) {
+                        currentHeight = getTextViewHeight(textView, rowDatas.get(j), mColumnWidth);
+                    } else {
+                        currentHeight = measureTextHeight(textView, rowDatas.get(j));
+                    }
                     buffer.append("[" + currentHeight + "]");
                     if (currentHeight > maxHeight) {
                         mRowMaxHeights.set(i, currentHeight);
@@ -412,28 +431,28 @@ public class LockTableView {
                 changeAllScrollView(x, y);
             }
         });
-        if(mOnItemClickListenter!=null){
+        if (mOnItemClickListenter != null) {
             mTableViewAdapter.setOnItemClickListenter(mOnItemClickListenter);
         }
-        if(mOnItemLongClickListenter!=null){
+        if (mOnItemLongClickListenter != null) {
             mTableViewAdapter.setOnItemLongClickListenter(mOnItemLongClickListenter);
         }
-        if(mOnItemSeletor!=0){
+        if (mOnItemSeletor != 0) {
             mTableViewAdapter.setOnItemSeletor(mOnItemSeletor);
-        }else{
+        } else {
             mTableViewAdapter.setOnItemSeletor(R.color.dashline_color);
         }
         mTableViewAdapter.setTableViewRangeListener(new OnTableViewRangeListener() {
             @Override
             public void onLeft(HorizontalScrollView view) {
-               if (mTableViewRangeListener!=null){
-                   mTableViewRangeListener.onLeft(view);
-               }
+                if (mTableViewRangeListener != null) {
+                    mTableViewRangeListener.onLeft(view);
+                }
             }
 
             @Override
             public void onRight(HorizontalScrollView view) {
-                if (mTableViewRangeListener!=null){
+                if (mTableViewRangeListener != null) {
                     mTableViewRangeListener.onRight(view);
                 }
             }
@@ -487,14 +506,14 @@ public class LockTableView {
 
                 @Override
                 public void onScrollFarLeft(HorizontalScrollView scrollView) {
-                    if(mTableViewRangeListener!=null){
+                    if (mTableViewRangeListener != null) {
                         mTableViewRangeListener.onLeft(scrollView);
                     }
                 }
 
                 @Override
                 public void onScrollFarRight(HorizontalScrollView scrollView) {
-                    if(mTableViewRangeListener!=null){
+                    if (mTableViewRangeListener != null) {
                         mTableViewRangeListener.onRight(scrollView);
                     }
                 }
@@ -510,14 +529,14 @@ public class LockTableView {
 
                 @Override
                 public void onScrollFarLeft(HorizontalScrollView scrollView) {
-                    if(mTableViewRangeListener!=null){
+                    if (mTableViewRangeListener != null) {
                         mTableViewRangeListener.onLeft(scrollView);
                     }
                 }
 
                 @Override
                 public void onScrollFarRight(HorizontalScrollView scrollView) {
-                    if(mTableViewRangeListener!=null){
+                    if (mTableViewRangeListener != null) {
                         mTableViewRangeListener.onRight(scrollView);
                     }
                 }
@@ -609,6 +628,26 @@ public class LockTableView {
     }
 
     /**
+     * 说明 根据文字和指定宽度计算高度
+     * 作者 郭翰林
+     * 创建时间 2018/3/15 下午12:39
+     *
+     * @param textView
+     * @param text
+     * @param width
+     * @return
+     */
+    private int getTextViewHeight(TextView textView, String text, int width) {
+        if (textView != null) {
+            TextPaint textPaint = textView.getPaint();
+            StaticLayout staticLayout = new StaticLayout(text, textPaint, DisplayUtil.dip2px(mContext, width), Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
+            int height = DisplayUtil.px2dip(mContext, staticLayout.getHeight());
+            return height;
+        }
+        return 0;
+    }
+
+    /**
      * 根据文字计算textview的高度
      *
      * @param view
@@ -677,6 +716,24 @@ public class LockTableView {
             }
         }
         scrollView.addView(linearLayout);
+    }
+
+    /**
+     * 说明 改变指定列指定宽度
+     * 作者 郭翰林
+     * 创建时间 2018/3/15 上午11:06
+     *
+     * @param mColumnNum
+     * @param mColumnWidth
+     */
+    private void changeColumnWidth(int mColumnNum, int mColumnWidth) {
+        if (mColumnMaxWidths != null && mColumnMaxWidths.size() > 0) {
+            if (mColumnNum < mColumnMaxWidths.size() && mColumnNum >= 0) {
+                mColumnMaxWidths.set(mColumnNum, mColumnWidth + DisplayUtil.px2dip(mContext, 15) * 2);
+            } else {
+                Log.e("LockTableView", "指定列数不存在");
+            }
+        }
     }
 
 
@@ -766,6 +823,19 @@ public class LockTableView {
         return this;
     }
 
+    /**
+     * 指定第几列对应的宽度
+     *
+     * @param mColumnNum
+     * @param mColumnWidth
+     * @return
+     */
+    public LockTableView setColumnWidth(int mColumnNum, int mColumnWidth) {
+        this.mColumnNum = mColumnNum;
+        this.mColumnWidth = mColumnWidth;
+        return this;
+    }
+
     //值获取
     public ArrayList<Integer> getColumnMaxWidths() {
         return mColumnMaxWidths;
@@ -809,6 +879,7 @@ public class LockTableView {
         mTableViewAdapter.notifyDataSetChanged();
     }
 
+
     /**
      * 横向滚动监听
      */
@@ -826,12 +897,13 @@ public class LockTableView {
     /**
      * 横向滚动视图滑动到边界的监听
      */
-    public interface OnTableViewRangeListener{
+    public interface OnTableViewRangeListener {
 
         /**
          * 说明 最左侧
          * 作者 郭翰林
          * 创建时间 2017/12/14 下午4:45
+         *
          * @param view
          */
         void onLeft(HorizontalScrollView view);
@@ -840,6 +912,7 @@ public class LockTableView {
          * 说明 最右侧
          * 作者 郭翰林
          * 创建时间 2017/12/14 下午4:45
+         *
          * @param view
          */
         void onRight(HorizontalScrollView view);
@@ -878,13 +951,13 @@ public class LockTableView {
      * 作者 郭翰林
      * 创建时间 2018/2/2 下午4:50
      */
-    public interface OnItemClickListenter{
+    public interface OnItemClickListenter {
 
         /**
-         * @param item 点击项
+         * @param item     点击项
          * @param position 点击位置
          */
-         void onItemClick(View item,int position);
+        void onItemClick(View item, int position);
     }
 
     /**
@@ -892,12 +965,12 @@ public class LockTableView {
      * 作者 郭翰林
      * 创建时间 2018/2/2 下午4:50
      */
-    public interface OnItemLongClickListenter{
+    public interface OnItemLongClickListenter {
 
         /**
-         * @param item 点击项
+         * @param item     点击项
          * @param position 点击位置
          */
-        void onItemLongClick(View item,int position);
+        void onItemLongClick(View item, int position);
     }
 }

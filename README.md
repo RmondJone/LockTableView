@@ -43,6 +43,7 @@ mLockTableView.setLockFristColumn(true) //是否锁定第一列
       .setLockFristRow(true) //是否锁定第一行
       .setMaxColumnWidth(100) //列最大宽度
       .setMinColumnWidth(60) //列最小宽度
+      .setColumnWidth(1,60) //设置指定列文本宽度(从0开始计算,宽度单位dp)
       .setMinRowHeight(20)//行最小高度
       .setMaxRowHeight(60)//行最大高度
       .setTextViewSize(16) //单元格字体大小
@@ -203,6 +204,14 @@ private OnItemLongClickListenter mOnItemLongClickListenter;
  * Item选中颜色
  */
 private int mOnItemSeletor;
+/**
+ * 指定要改变列数
+ */
+private int mColumnNum = -1;
+/**
+ * 指定要改变的列宽度(dp)
+ */
+private int mColumnWidth = -1;
 
 
 ```

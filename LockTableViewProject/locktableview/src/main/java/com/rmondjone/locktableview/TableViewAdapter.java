@@ -159,20 +159,20 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
                     public void onItemSelected(View view, int position) {
                         RecyclerView.LayoutManager mLockLayoutManager = holder.mLockRecyclerView.getLayoutManager();
                         int itemCount=mLockLayoutManager.getItemCount();
-                        View item=mLockLayoutManager.getChildAt(position+1);
+                        View item=mLockLayoutManager.getChildAt(position);
                         item.setBackgroundColor(ContextCompat.getColor(mContext,mOnItemSeletor));
                         for(int i=0;i<itemCount;i++){
                             if(i!=position){
-                                mLockLayoutManager.getChildAt(i+1).setBackgroundColor(Color.TRANSPARENT);
+                                mLockLayoutManager.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
                             }
                         }
                         RecyclerView.LayoutManager mUnLockLayoutManager = holder.mMainRecyclerView.getLayoutManager();
                         int itemUnLockCount=mUnLockLayoutManager.getItemCount();
-                        View mUnlockItem=mUnLockLayoutManager.getChildAt(position+1);
+                        View mUnlockItem=mUnLockLayoutManager.getChildAt(position);
                         mUnlockItem.setBackgroundColor(ContextCompat.getColor(mContext,mOnItemSeletor));
                         for(int i=0;i<itemUnLockCount;i++){
                             if(i!=position){
-                                mUnLockLayoutManager.getChildAt(i+1).setBackgroundColor(Color.TRANSPARENT);
+                                mUnLockLayoutManager.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
                             }
                         }
                     }
@@ -183,8 +183,6 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
                 if (mOnItemLongClickListenter != null) {
                     mLockAdapter.setOnItemLongClickListenter(mOnItemLongClickListenter);
                 }
-                holder.mLockRecyclerView.setPullRefreshEnabled(false);
-                holder.mLockRecyclerView.setLoadingMoreEnabled(false);
                 holder.mLockRecyclerView.setLayoutManager(layoutManager);
                 holder.mLockRecyclerView.addItemDecoration(new DividerItemDecoration(mContext
                         , DividerItemDecoration.VERTICAL));
@@ -211,20 +209,20 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
                 public void onItemSelected(View view, int position) {
                     RecyclerView.LayoutManager mLockLayoutManager = holder.mLockRecyclerView.getLayoutManager();
                     int itemCount=mLockLayoutManager.getItemCount();
-                    View item=mLockLayoutManager.getChildAt(position+1);
+                    View item=mLockLayoutManager.getChildAt(position);
                     item.setBackgroundColor(ContextCompat.getColor(mContext,mOnItemSeletor));
                     for(int i=0;i<itemCount;i++){
                         if(i!=position){
-                            mLockLayoutManager.getChildAt(i+1).setBackgroundColor(Color.TRANSPARENT);
+                            mLockLayoutManager.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
                         }
                     }
                     RecyclerView.LayoutManager mUnLockLayoutManager = holder.mMainRecyclerView.getLayoutManager();
                     int itemUnLockCount=mUnLockLayoutManager.getItemCount();
-                    View mUnlockItem=mUnLockLayoutManager.getChildAt(position+1);
+                    View mUnlockItem=mUnLockLayoutManager.getChildAt(position);
                     mUnlockItem.setBackgroundColor(ContextCompat.getColor(mContext,mOnItemSeletor));
                     for(int i=0;i<itemUnLockCount;i++){
                         if(i!=position){
-                            mUnLockLayoutManager.getChildAt(i+1).setBackgroundColor(Color.TRANSPARENT);
+                            mUnLockLayoutManager.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
                         }
                     }
                 }
@@ -235,8 +233,6 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
             if (mOnItemLongClickListenter != null) {
                 mUnLockAdapter.setOnItemLongClickListenter(mOnItemLongClickListenter);
             }
-            holder.mMainRecyclerView.setPullRefreshEnabled(false);
-            holder.mMainRecyclerView.setLoadingMoreEnabled(false);
             LinearLayoutManager unlockLayoutManager = new LinearLayoutManager(mContext);
             unlockLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             holder.mMainRecyclerView.setLayoutManager(unlockLayoutManager);
@@ -254,14 +250,14 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
     }
 
     class TableViewHolder extends RecyclerView.ViewHolder {
-        XRecyclerView mLockRecyclerView;
-        XRecyclerView mMainRecyclerView;
+        RecyclerView mLockRecyclerView;
+        RecyclerView mMainRecyclerView;
         CustomHorizontalScrollView mScrollView;
 
         public TableViewHolder(View itemView) {
             super(itemView);
-            mLockRecyclerView = (XRecyclerView) itemView.findViewById(R.id.lock_recyclerview);
-            mMainRecyclerView = (XRecyclerView) itemView.findViewById(R.id.main_recyclerview);
+            mLockRecyclerView = (RecyclerView) itemView.findViewById(R.id.lock_recyclerview);
+            mMainRecyclerView = (RecyclerView) itemView.findViewById(R.id.main_recyclerview);
             //解决滑动冲突，只保留最外层RecyclerView的下拉和上拉事件
             mLockRecyclerView.setFocusable(false);
             mMainRecyclerView.setFocusable(false);
