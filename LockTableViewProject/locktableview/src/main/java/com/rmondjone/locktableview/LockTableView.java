@@ -26,8 +26,13 @@ import android.widget.Toast;
 import com.rmondjone.xrecyclerview.ProgressStyle;
 import com.rmondjone.xrecyclerview.XRecyclerView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 说明 可锁定首行和首列的表格视图
@@ -122,6 +127,10 @@ public class LockTableView {
      * Item选中样式
      */
     private int mOnItemSeletor;
+    /**
+     * 要改变的列集合
+     */
+    private HashMap<Integer, Integer> mChangeColumns = new HashMap<>();
 
 
     //表格数据
@@ -184,14 +193,6 @@ public class LockTableView {
      * 列表适配器
      */
     private TableViewAdapter mTableViewAdapter;
-    /**
-     * 指定要改变列数
-     */
-    private int mColumnNum = -1;
-    /**
-     * 指定要改变的列宽度(dp)
-     */
-    private int mColumnWidth = -1;
 
 
     /**
@@ -304,8 +305,10 @@ public class LockTableView {
 //                Log.e("第"+i+"行列最大宽度",buffer.toString());
             }
             //如果用户指定某列宽度则按照用户指定宽度算
-            if (mColumnNum >= 0 && mColumnWidth > 0) {
-                changeColumnWidth(mColumnNum, mColumnWidth);
+            if (mChangeColumns.size() > 0) {
+                for (Integer key : mChangeColumns.keySet()) {
+                    changeColumnWidth(key, mChangeColumns.get(key));
+                }
             }
 //            Log.e("每列最大宽度dp:",mColumnMaxWidths.toString());
 
@@ -328,8 +331,8 @@ public class LockTableView {
                 for (int j = 0; j < rowDatas.size(); j++) {
                     int currentHeight;
                     //如果用户指定某列宽度则按照用户指定宽度算对应列的高度
-                    if (j == mColumnNum && mColumnWidth > 0) {
-                        currentHeight = getTextViewHeight(textView, rowDatas.get(j), mColumnWidth);
+                    if (mChangeColumns.size() > 0 && mChangeColumns.containsKey(j)) {
+                        currentHeight = getTextViewHeight(textView, rowDatas.get(j), mChangeColumns.get(j));
                     } else {
                         currentHeight = measureTextHeight(textView, rowDatas.get(j));
                     }
@@ -831,8 +834,11 @@ public class LockTableView {
      * @return
      */
     public LockTableView setColumnWidth(int mColumnNum, int mColumnWidth) {
-        this.mColumnNum = mColumnNum;
-        this.mColumnWidth = mColumnWidth;
+        //判断是否已经设置过
+        if (mChangeColumns.containsKey(mColumnNum)) {
+            mChangeColumns.remove(mColumnNum);
+        }
+        mChangeColumns.put(mColumnNum, mColumnWidth);
         return this;
     }
 

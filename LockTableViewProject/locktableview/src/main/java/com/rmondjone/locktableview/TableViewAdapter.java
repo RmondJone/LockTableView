@@ -207,13 +207,15 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
             mUnLockAdapter.setOnItemSelectedListenter(new OnItemSelectedListenter() {
                 @Override
                 public void onItemSelected(View view, int position) {
-                    RecyclerView.LayoutManager mLockLayoutManager = holder.mLockRecyclerView.getLayoutManager();
-                    int itemCount=mLockLayoutManager.getItemCount();
-                    View item=mLockLayoutManager.getChildAt(position);
-                    item.setBackgroundColor(ContextCompat.getColor(mContext,mOnItemSeletor));
-                    for(int i=0;i<itemCount;i++){
-                        if(i!=position){
-                            mLockLayoutManager.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                    if(isLockColumn){
+                        RecyclerView.LayoutManager mLockLayoutManager = holder.mLockRecyclerView.getLayoutManager();
+                        int itemCount=mLockLayoutManager.getItemCount();
+                        View item=mLockLayoutManager.getChildAt(position);
+                        item.setBackgroundColor(ContextCompat.getColor(mContext,mOnItemSeletor));
+                        for(int i=0;i<itemCount;i++){
+                            if(i!=position){
+                                mLockLayoutManager.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                            }
                         }
                     }
                     RecyclerView.LayoutManager mUnLockLayoutManager = holder.mMainRecyclerView.getLayoutManager();

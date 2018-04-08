@@ -29,7 +29,7 @@ repositories {
 * 第二步
 ```java
 dependencies {
-	compile 'com.github.RmondJone:LockTableView:1.1.0'
+	compile 'com.github.RmondJone:LockTableView:1.1.1'
 }
 ```
 
@@ -205,13 +205,9 @@ private OnItemLongClickListenter mOnItemLongClickListenter;
  */
 private int mOnItemSeletor;
 /**
- * 指定要改变列数
+ * 要改变的列集合
  */
-private int mColumnNum = -1;
-/**
- * 指定要改变的列宽度(dp)
- */
-private int mColumnWidth = -1;
+private HashMap<Integer, Integer> mChangeColumns = new HashMap<>();
 
 
 ```

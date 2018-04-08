@@ -52,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
                 .setLockFristRow(true) //是否锁定第一行
                 .setMaxColumnWidth(100) //列最大宽度
                 .setMinColumnWidth(60) //列最小宽度
-                .setColumnWidth(1,60) //设置指定列文本宽度
+                .setColumnWidth(1,30) //设置指定列文本宽度
+                .setColumnWidth(2,20)
                 .setMinRowHeight(20)//行最小高度
                 .setMaxRowHeight(60)//行最大高度
                 .setTextViewSize(16) //单元格字体大小
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 .setOnLoadingListener(new LockTableView.OnLoadingListener() {
                     @Override
                     public void onRefresh(final XRecyclerView mXRecyclerView, final ArrayList<ArrayList<String>> mTableDatas) {
+                        Log.e("onRefresh",Thread.currentThread().toString());
                         Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
                             @Override
@@ -109,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onLoadMore(final XRecyclerView mXRecyclerView, final ArrayList<ArrayList<String>> mTableDatas) {
+                        Log.e("onLoadMore",Thread.currentThread().toString());
                         Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
                             @Override
