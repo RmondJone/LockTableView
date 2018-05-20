@@ -128,6 +128,10 @@ public class LockTableView {
      */
     private int mOnItemSeletor;
     /**
+     * 单元格内边距
+     */
+    private int mCellPadding;
+    /**
      * 要改变的列集合
      */
     private HashMap<Integer, Integer> mChangeColumns = new HashMap<>();
@@ -223,6 +227,7 @@ public class LockTableView {
         mTableContentTextColor = R.color.border_color;
         mFristRowBackGroudColor = R.color.table_head;
         mTextViewSize = 16;
+        mCellPadding=DisplayUtil.dip2px(mContext,45);
     }
 
     /**
@@ -288,7 +293,7 @@ public class LockTableView {
                     //设置布局
                     LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT);
-                    textViewParams.setMargins(45, 45, 45, 45);//android:layout_margin="15dp"
+                    textViewParams.setMargins(mCellPadding, mCellPadding, mCellPadding, mCellPadding);//android:layout_margin="15dp"
                     textView.setLayoutParams(textViewParams);
                     if (i == 0) {
                         mColumnMaxWidths.add(measureTextWidth(textView, rowDatas.get(j)));
@@ -324,7 +329,7 @@ public class LockTableView {
                 //设置布局
                 LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
-                textViewParams.setMargins(45, 45, 45, 45);//android:layout_margin="15dp"
+                textViewParams.setMargins(mCellPadding, mCellPadding, mCellPadding, mCellPadding);//android:layout_margin="15dp"
                 textView.setLayoutParams(textViewParams);
                 int maxHeight = measureTextHeight(textView, rowDatas.get(0));
                 mRowMaxHeights.add(maxHeight);
@@ -422,6 +427,7 @@ public class LockTableView {
             }
         });
         mTableViewAdapter = new TableViewAdapter(mContext, mTableColumnDatas, mTableRowDatas, isLockFristColumn, isLockFristRow);
+        mTableViewAdapter.setCellPadding(mCellPadding);
         mTableViewAdapter.setColumnMaxWidths(mColumnMaxWidths);
         mTableViewAdapter.setRowMaxHeights(mRowMaxHeights);
         mTableViewAdapter.setTextViewSize(mTextViewSize);
@@ -496,7 +502,7 @@ public class LockTableView {
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mColumnTitleView.getLayoutParams();
             layoutParams.width = DisplayUtil.dip2px(mContext, mColumnMaxWidths.get(0));
             layoutParams.height = DisplayUtil.dip2px(mContext, mRowMaxHeights.get(0));
-            layoutParams.setMargins(45, 45, 45, 45);
+            layoutParams.setMargins(mCellPadding, mCellPadding, mCellPadding, mCellPadding);
             mColumnTitleView.setLayoutParams(layoutParams);
             //构造滚动视图
             createScollview(mLockScrollView, mTableFristData, true);
@@ -695,7 +701,7 @@ public class LockTableView {
             //设置布局
             LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
-            textViewParams.setMargins(45, 45, 45, 45);
+            textViewParams.setMargins(mCellPadding, mCellPadding, mCellPadding, mCellPadding);
             textView.setLayoutParams(textViewParams);
             ViewGroup.LayoutParams textViewParamsCopy = textView.getLayoutParams();
             if (isLockFristColumn) {
@@ -823,6 +829,11 @@ public class LockTableView {
 
     public LockTableView setOnItemSeletor(int mOnItemSeletor) {
         this.mOnItemSeletor = mOnItemSeletor;
+        return this;
+    }
+
+    public LockTableView setCellPadding(int mCellPadding) {
+        this.mCellPadding = DisplayUtil.dip2px(mContext,mCellPadding);
         return this;
     }
 

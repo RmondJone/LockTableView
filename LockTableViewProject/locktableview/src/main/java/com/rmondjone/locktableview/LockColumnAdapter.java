@@ -57,6 +57,10 @@ public class LockColumnAdapter extends RecyclerView.Adapter<LockColumnAdapter.Lo
      * 单元格字体大小
      */
     private int mTextViewSize;
+    /**
+     * 单元格内边距
+     */
+    private int mCellPadding;
 
     /**
      * Item点击事件
@@ -98,7 +102,7 @@ public class LockColumnAdapter extends RecyclerView.Adapter<LockColumnAdapter.Lo
         } else {
             layoutParams.height = DisplayUtil.dip2px(mContext, mRowMaxHeights.get(position));
         }
-        layoutParams.setMargins(45, 45, 45, 45);
+        layoutParams.setMargins(mCellPadding, mCellPadding, mCellPadding, mCellPadding);
         holder.mTextView.setLayoutParams(layoutParams);
         //设置颜色
         if (!isLockFristRow) {
@@ -206,6 +210,10 @@ public class LockColumnAdapter extends RecyclerView.Adapter<LockColumnAdapter.Lo
 
     public void setLockFristRow(boolean lockFristRow) {
         isLockFristRow = lockFristRow;
+    }
+
+    public void setCellPadding(int mCellPadding) {
+        this.mCellPadding = mCellPadding;
     }
 
     public void setFristRowBackGroudColor(int mFristRowBackGroudColor) {

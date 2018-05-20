@@ -71,6 +71,11 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
     private int mTableContentTextColor;
 
     /**
+     * 单元格内边距
+     */
+    private int mCellPadding;
+
+    /**
      * 表格横向滚动监听事件
      */
     private LockTableView.OnTableViewListener mTableViewListener;
@@ -147,6 +152,7 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
             holder.mLockRecyclerView.setVisibility(View.VISIBLE);
             if (mLockAdapter == null) {
                 mLockAdapter = new LockColumnAdapter(mContext, mLockColumnDatas);
+                mLockAdapter.setCellPadding(mCellPadding);
                 mLockAdapter.setRowMaxHeights(mRowMaxHeights);
                 mLockAdapter.setColumnMaxWidths(mColumnMaxWidths);
                 mLockAdapter.setTextViewSize(mTextViewSize);
@@ -196,6 +202,7 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
         //构造主表格视图
         if (mUnLockAdapter == null) {
             mUnLockAdapter = new UnLockColumnAdapter(mContext, mTableDatas);
+            mUnLockAdapter.setCellPadding(mCellPadding);
             mUnLockAdapter.setColumnMaxWidths(mColumnMaxWidths);
             mUnLockAdapter.setRowMaxHeights(mRowMaxHeights);
             mUnLockAdapter.setTextViewSize(mTextViewSize);
@@ -353,5 +360,9 @@ public class TableViewAdapter extends RecyclerView.Adapter<TableViewAdapter.Tabl
 
     public void setOnItemSeletor(int mOnItemSeletor) {
         this.mOnItemSeletor = mOnItemSeletor;
+    }
+
+    public void setCellPadding(int mCellPadding) {
+        this.mCellPadding = mCellPadding;
     }
 }

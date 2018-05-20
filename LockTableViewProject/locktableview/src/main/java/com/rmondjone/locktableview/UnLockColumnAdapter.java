@@ -65,6 +65,11 @@ public class UnLockColumnAdapter extends RecyclerView.Adapter<UnLockColumnAdapte
     private boolean isLockFristColumn = true;
 
     /**
+     * 单元格内边距
+     */
+    private int mCellPadding;
+
+    /**
      * Item点击事件
      */
     private LockTableView.OnItemClickListenter mOnItemClickListenter;
@@ -225,6 +230,10 @@ public class UnLockColumnAdapter extends RecyclerView.Adapter<UnLockColumnAdapte
         this.mOnItemSelectedListenter = mOnItemSelectedListenter;
     }
 
+    public void setCellPadding(int mCellPadding) {
+        this.mCellPadding = mCellPadding;
+    }
+
     class UnLockViewHolder extends RecyclerView.ViewHolder {
         LinearLayout mLinearLayout;
 
@@ -258,7 +267,7 @@ public class UnLockColumnAdapter extends RecyclerView.Adapter<UnLockColumnAdapte
             //设置布局
             LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
-            textViewParams.setMargins(45, 45, 45, 45);
+            textViewParams.setMargins(mCellPadding, mCellPadding, mCellPadding, mCellPadding);
             textViewParams.height = DisplayUtil.dip2px(mContext, mMaxHeight);
             if (isLockFristColumn) {
                 textViewParams.width = DisplayUtil.dip2px(mContext, mColumnMaxWidths.get(i+1));
