@@ -29,7 +29,7 @@ repositories {
 * 第二步
 ```java
 dependencies {
-	compile 'com.github.RmondJone:LockTableView:1.1.1'
+	compile 'com.github.RmondJone:LockTableView:1.1.2'
 }
 ```
 
@@ -47,6 +47,7 @@ mLockTableView.setLockFristColumn(true) //是否锁定第一列
       .setMinRowHeight(20)//行最小高度
       .setMaxRowHeight(60)//行最大高度
       .setTextViewSize(16) //单元格字体大小
+      .setCellPadding(15)//设置单元格内边距(dp)
       .setFristRowBackGroudColor(R.color.table_head)//表头背景色
       .setTableHeadTextColor(R.color.beijin)//表头字体颜色
       .setTableContentTextColor(R.color.border_color)//单元格字体颜色
@@ -205,9 +206,9 @@ private OnItemLongClickListenter mOnItemLongClickListenter;
  */
 private int mOnItemSeletor;
 /**
- * 要改变的列集合
+ * 单元格内边距
  */
-private HashMap<Integer, Integer> mChangeColumns = new HashMap<>();
+private int mCellPadding;
 
 
 ```

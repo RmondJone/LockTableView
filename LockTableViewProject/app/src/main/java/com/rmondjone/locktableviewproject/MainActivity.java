@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 .setFristRowBackGroudColor(R.color.table_head)//表头背景色
                 .setTableHeadTextColor(R.color.beijin)//表头字体颜色
                 .setTableContentTextColor(R.color.border_color)//单元格字体颜色
-                .setCellPadding(0)//设置单元格内边距(dp)
+                .setCellPadding(15)//设置单元格内边距(dp)
                 .setNullableString("N/A") //空值替换值
                 .setTableViewListener(new LockTableView.OnTableViewListener() {
                     @Override
