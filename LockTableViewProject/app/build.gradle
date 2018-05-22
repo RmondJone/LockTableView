@@ -36,6 +36,6 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.0.0'
     testCompile 'junit:junit:4.12'
-    compile project(':locktableview')
-//    compile 'com.github.RmondJone:LockTableView:1.1.1'
+//    compile project(':locktableview')
+    compile 'com.github.RmondJone:LockTableView:1.1.2'
 }
