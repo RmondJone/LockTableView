@@ -219,11 +219,6 @@ private int mCellPadding;
 * 注：有定制化需求自己下源码根据自己的需求改动，不要指望别人给你实现，这样永远没有成长！
 * 本控件实现没有难度，只要静心看代码都能看的懂。我只提供最基础的功能，尽量满足大部分的开发需求。
 
-## 打赏
-![微信图片_20181024114409.jpg](https://upload-images.jianshu.io/upload_images/6023277-b48f3cee0d41dae0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-![微信图片_20181024114416.jpg](https://upload-images.jianshu.io/upload_images/6023277-41a2fa211ea23a80.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
 ## License
 ```java
 Copyright (c) 2018 Guohanlin
